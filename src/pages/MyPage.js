@@ -10,10 +10,12 @@ import { RiQuestionAnswerLine } from "react-icons/ri";
 import { RiFileList3Line, RiCoinsLine } from "react-icons/ri";
 import '../css/MyPage.css';
 import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 
 const MyPage = () => {
   const [loginuser, setLoginuser] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const forSet = JSON.parse(localStorage.getItem("loginUser"));
@@ -58,7 +60,8 @@ const MyPage = () => {
           <i><RiCoinsLine /></i> 포인트
         </li>
         <li className="changeInfo">
-          <i><IoSettingsOutline /></i> 개인정보 변경
+          <button onClick={()=>navigate("/myPage/ChangeInfo")}>
+          <i><IoSettingsOutline /></i> 개인 정보 변경 </button>
         </li>
       </ul>
     </div>
