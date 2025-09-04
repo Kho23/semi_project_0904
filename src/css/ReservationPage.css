@@ -1,0 +1,314 @@
+/* 전체 래퍼: 화면 가운데 정렬 */
+.reservation-page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* 상단 정렬 */
+  min-height: 100vh; /* 최소 높이 설정 */
+  background: radial-gradient(
+    80% 100% at 50% 0%,
+    #2b2a40 0%,
+    #1f1e2e 80%
+  ); /* 약간 더 부드러운 배경색 */
+  padding: 20px; /* 전체 컨테이너 주변 패딩 */
+  box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+}
+
+/* 예약 컨테이너 */
+.reservation-container {
+  display: flex;
+  flex-direction: column;
+  width: 1200px; /* 전체 너비 고정 */
+  max-width: 95vw; /* 너무 커지지 않도록 최대 너비 설정 */
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* 자식 요소의 둥근 모서리 유지 */
+}
+
+/* 헤더 스타일 */
+.header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 20px;
+  background-color: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tab-buttons {
+  display: flex;
+}
+
+.tab {
+  padding: 18px 30px; /* 패딩 증가 */
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 17px; /* 폰트 크기 증가 */
+  font-weight: 700; /* 폰트 굵기 조절 */
+  color: #a0a0a0;
+  transition: color 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.tab.active {
+  color: #333;
+  border-bottom: 3px solid #007bff; /* 활성 탭 밑줄 강조 */
+}
+
+/* 메인 콘텐츠 레이아웃 */
+.main-content {
+  display: flex;
+  flex-grow: 1;
+  border-top: 1px solid #eee;
+}
+
+/* 개별 패널 스타일 */
+.date-selection-panel,
+.movie-list-panel,
+.theater-list-panel,
+.time-list-panel {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-right: 1px solid #eee;
+  padding-bottom: 10px; /* 하단 여백 추가 */
+}
+
+.date-selection-panel {
+  width: 15%; /* 날짜 패널 너비 조정 */
+  min-width: 120px; /* 최소 너비 */
+  max-width: 180px; /* 최대 너비 */
+  border-right: 1px solid #e0e0e0;
+}
+
+.movie-list-panel {
+  flex: 2; /* 영화 목록이 더 넓은 공간 차지 */
+  border-right: 1px solid #e0e0e0;
+  min-width: 250px;
+}
+
+.theater-list-panel {
+  flex: 1.5; /* 상영관 목록 너비 조정 */
+  border-right: 1px solid #e0e0e0;
+  min-width: 180px;
+}
+
+.time-list-panel {
+  flex: 1.5; /* 시간 목록 너비 조정 */
+  border-right: none; /* 마지막 패널은 오른쪽 보더 없음 */
+  min-width: 180px;
+}
+
+/* 날짜 선택 섹션 - 7개 모두 보이게 */
+.date-picker-section {
+  display: flex;
+  justify-content: center; /* 가운데 정렬 */
+  align-items: center;
+  padding: 10px 5px; /* 좌우 패딩 줄임 */
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #e0e0e0;
+  flex-wrap: wrap; /* 작은 화면에서 줄바꿈 */
+}
+
+.date-list {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr); /* 한 줄에 1개씩 세로로 정렬 */
+  gap: 8px; /* 버튼 간격 줄임 */
+  width: 100%; /* 부모 너비에 맞춤 */
+}
+
+/* 날짜 넘기기 버튼은 숨김 */
+.nav-button {
+  display: none;
+}
+
+/* 날짜 버튼 디자인 */
+.date-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 65px; /* 높이 조절 */
+  border: 1px solid #e0e0e0;
+  background-color: #fff;
+  cursor: pointer;
+  border-radius: 6px; /* 둥근 모서리 */
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  position: relative;
+  overflow: hidden;
+  color: #555;
+  font-size: 13px;
+}
+
+.date-button:hover {
+  background-color: #f2f2f2;
+  border-color: #c0c0c0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.date-button.selected {
+  border: 2px solid #007bff;
+  background-color: #e6f2ff; /* 선택 시 배경색 변경 */
+  box-shadow: 0 3px 8px rgba(0, 123, 255, 0.2);
+  transform: translateY(-1px);
+  color: #000;
+}
+
+.date-button.selected .day {
+  color: #007bff; /* 선택 시 요일 색상 변경 */
+  font-weight: 700;
+}
+.date-button.selected .date-number {
+  color: #000; /* 선택 시 날짜 숫자 색상 변경 */
+  font-weight: 800;
+}
+
+.day {
+  font-size: 12px; /* 폰트 크기 줄임 */
+  font-weight: 500; /* 굵기 조절 */
+  color: #888;
+  margin-bottom: 2px;
+}
+
+.date-number {
+  font-size: 20px; /* 폰트 크기 조절 */
+  font-weight: 700; /* 굵기 조절 */
+  line-height: 1; /* 줄 간격 조절 */
+}
+
+/* 칼럼 헤더 및 스크롤 영역 */
+.column-header {
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.column-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.scroll-area {
+  overflow-y: auto;
+  flex-grow: 1;
+  padding: 10px;
+}
+
+/* 영화 목록 스타일 */
+.movie-item {
+  border-bottom: 1px solid #f0f0f0;
+}
+.movie-item.selected {
+  background-color: #e6f2ff; /* 선택된 영화 아이템 배경색 */
+  border-left: 3px solid #007bff; /* 선택 시 왼쪽 보더 강조 */
+  margin-left: -3px; /* 보더가 패널 안으로 들어오도록 */
+}
+
+.movie-button {
+  width: 100%;
+  text-align: left;
+  padding: 15px 10px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s, border-left 0.2s;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.movie-button:hover,
+.movie-button:focus {
+  background-color: #f0f0f0;
+  outline: none;
+}
+
+.movie-item.selected .movie-button {
+  font-weight: 700; /* 선택 시 폰트 굵기 */
+  color: #000;
+}
+
+.rating-badge {
+  font-size: 12px;
+  background-color: #555; /* 좀 더 부드러운 색상 */
+  color: white;
+  padding: 2px 6px; /* 패딩 조절 */
+  border-radius: 3px;
+  margin-right: 8px;
+  font-weight: normal;
+}
+
+/* 상영관 스타일 */
+.theater-item {
+  border-bottom: 1px solid #f0f0f0;
+}
+.theater-item.selected {
+  background-color: #e6f2ff;
+  border-left: 3px solid #007bff;
+  margin-left: -3px;
+}
+
+.theater-button {
+  width: 100%;
+  text-align: left;
+  padding: 10px 10px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background-color 0.2s, border-left 0.2s;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.theater-button:hover,
+.theater-button:focus {
+  background-color: #f0f0f0;
+  outline: none;
+}
+.theater-item.selected .theater-button {
+  font-weight: 700;
+  color: #000;
+}
+
+/* 시간 스타일 */
+.time-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(70px, 1fr)
+  ); /* 최소 너비 줄임 */
+  gap: 8px; /* 간격 줄임 */
+  padding: 10px;
+}
+
+.time-button {
+  padding: 10px 5px; /* 패딩 조절 */
+  border: 1px solid #c0c0c0;
+  background-color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: background-color 0.2s, border-color 0.2s, transform 0.1s;
+}
+
+.time-button:hover {
+  background-color: #e0e0e0;
+  border-color: #a0a0a0;
+  transform: translateY(-1px);
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px 20px;
+  color: #a0a0a0;
+  font-size: 15px;
+  line-height: 1.5;
+}

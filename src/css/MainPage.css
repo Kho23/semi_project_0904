@@ -1,0 +1,27 @@
+.main-page-container {
+  position: relative;
+  min-height: 100vh;
+  background-color: #000;
+}
+
+.background-image-slider {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  transition: all 1s ease-in-out;
+}
+
+.background-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.7); /* bg-black/70 */
+  backdrop-filter: blur(4px); /* backdrop-blur-sm */
+}
+
+.main-content-area {
+  position: relative;
+  z-index: 20;
+}

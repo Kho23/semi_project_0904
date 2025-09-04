@@ -1,0 +1,98 @@
+.site-footer {
+  background-color: #000;
+  color: #9ca3af;
+  border-top: 1px solid #1f2937;
+}
+
+.footer-container {
+  max-width: 80rem; /* max-w-7xl */
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+.footer-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2.5rem;
+}
+@media (min-width: 768px) {
+  .footer-content-wrapper {
+    flex-direction: row;
+  }
+}
+
+.footer-section {
+  text-align: center;
+}
+@media (min-width: 768px) {
+  .logo-section, .info-section {
+    text-align: left;
+  }
+}
+
+/* 로고 섹션 */
+.logo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+@media (min-width: 768px) {
+  .logo-section {
+    align-items: flex-start;
+  }
+}
+
+.footer-logo {
+  width: 12rem;
+  margin-bottom: 1rem;
+}
+
+.copyright-text {
+  font-size: 0.75rem;
+}
+
+/* 정보 섹션 */
+.info-section {
+  font-size: 0.875rem;
+}
+.representatives-info {
+  margin-top: 0.5rem;
+}
+.info-label {
+  font-weight: 600;
+  color: #d1d5db;
+}
+
+/* 소셜 미디어 섹션 */
+.social-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.social-title {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #e5e7eb;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.social-link {
+  transition: opacity 0.2s;
+}
+.social-link:hover {
+  opacity: 0.8;
+}
+
+.social-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px; /* rounded-full */
+}

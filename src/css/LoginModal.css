@@ -1,0 +1,59 @@
+/* 모달 배경 반투명 */
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* 모달 크기 및 그림자 */
+.modal-content {
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 400px;
+  margin: auto;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* 모달 헤더 */
+.modal-header {
+  background-color: #343a40;
+  color: #fff;
+  border-bottom: none;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+/* 모달 바디 */
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* 라벨 */
+.modal-body label {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+/* 인풋 */
+.modal-body input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 100%;
+  font-size: 1rem;
+}
+
+/* 버튼 */
+.modal-body button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-body button:hover {
+  background-color: #222;
+  color: #fff;
+}
