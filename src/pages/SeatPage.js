@@ -16,13 +16,11 @@ const SeatPage = () => {
     seatData,
     setSeatData,
     selectedSeats,
-    setSelectedSeats,
     selectedNormalLimit,
     setSelectedNormalLimit,
     selectedDisabledLimit,
     setSelectedDisabledLimit,
     reservationData,
-    clickHandler,
     selectHandler,
     renderSeatBtn,
   } = seatApi();
@@ -31,8 +29,6 @@ const SeatPage = () => {
     const savedData = localStorage.getItem("reservedData");
     savedData ? setSeatData(JSON.parse(savedData)) : setSeatData(seatData);
   }, []);
-
-  const [reservationData2, setReservationData2] = useState([]);
 
   return (
     <div>
