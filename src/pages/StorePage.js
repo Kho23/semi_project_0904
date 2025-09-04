@@ -1,39 +1,40 @@
 import React, { useEffect } from "react";
 import { useCart } from "../api/useCart";
-import '../css/StorePage.css'; // CSS 파일 import
 import LoginApi from "../api/LoginApi";
 import LoginModal from "../components/auth/LoginModal";
 
 const StorePage = () => {
-  const {checkLogin,modalOpen,toggleModal,setLoginuser,navigate}=LoginApi();
+  const {checkLogin,modalOpen,toggleModal,setLoginuser}=LoginApi();
   const { cart, productData, handleAddToCart, handleDecrease, handleRemove, total } = useCart();
   const fmt = (n) => n.toLocaleString("ko-KR");
+
   useEffect(() => {
      const forSet = JSON.parse(localStorage.getItem("loginUser"));
      if (forSet) {
        setLoginuser(forSet);
      }
    }, []);
+
   const CategorySection = ({ title, type }) => (
-    <section className="category-section">
-      <h3 className="category-title">{title}</h3>
-      <div className="product-grid">
+    <section className="mb-16">
+      <h3 className="text-3xl font-bold text-amber-400 border-b-2 border-slate-700 pb-4 mb-8">{title}</h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {productData
           .filter((i) => i.type === type)
           .map((i) => (
-            <div key={i.id} className="product-card">
+            <div key={i.id} className="bg-slate-800 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2 flex flex-col">
               <img
                 src={i.image || "https://via.placeholder.com/300x200.png?text=No+Image"}
                 alt={i.name}
-                className="product-image"
+                className="w-full h-48 object-cover"
               />
-              <div className="product-card-body">
-                <h4 className="product-name">{i.name}</h4>
-                <p className="product-description">{i.description}</p>
-                <p className="product-price">{fmt(i.price)}원</p>
+              <div className="p-5 flex flex-col flex-grow">
+                <h4 className="text-lg font-bold text-white mb-2 truncate">{i.name}</h4>
+                <p className="text-sm text-slate-400 mb-4 flex-grow">{i.description}</p>
+                <p className="text-xl font-semibold text-amber-400 text-right">{fmt(i.price)}원</p>
               </div>
               <button
-                className="add-to-cart-button"
+                className="w-full p-3 bg-amber-400 text-slate-900 font-semibold cursor-pointer transition-colors duration-200 hover:bg-amber-300"
                 onClick={() => checkLogin(()=>handleAddToCart(i.id))}
               >
                 장바구니 담기
@@ -45,40 +46,40 @@ const StorePage = () => {
   );
 
   return (
-    <div className="store-page-container">
-      <div className="store-layout">
+    <div className="bg-slate-900 min-h-screen text-slate-100 p-4 sm:p-8">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
         
-        <main className="product-list-area">
+        <main className="w-full lg:w-2/3">
           <CategorySection title="🍿 음식" type="food" />
           <CategorySection title="🥤 음료" type="drink" />
           <CategorySection title="🎬 굿즈" type="goods" />
         </main>
 
-        <aside className="cart-area">
-          <div className="cart-sticky-wrapper">
-            <div className="cart-container">
-              <h3 className="cart-title">장바구니</h3>
+        <aside className="w-full lg:w-1/3">
+          <div className="sticky top-24">
+            <div className="bg-slate-800 rounded-xl p-6">
+              <h3 className="text-2xl font-bold mb-4 border-b border-slate-700 pb-3">장바구니</h3>
               {cart.length === 0 ? (
-                <div className="cart-empty-message">담긴 상품이 없습니다.</div>
+                <div className="text-slate-400 py-4">담긴 상품이 없습니다.</div>
               ) : (
                 <>
-                  <ul className="cart-item-list">
+                  <ul className="list-none p-0 m-0 max-h-[50vh] overflow-y-auto pr-2 flex flex-col gap-3">
                     {cart.map(({ id, name, price, quantity }) => (
-                      <li key={id} className="cart-item">
+                      <li key={id} className="flex items-center justify-between">
                         <div>
-                          <div className="cart-item-name">{name}</div>
-                          <div className="cart-item-details">{fmt(price)}원 × {quantity}개</div>
+                          <div className="font-semibold text-base">{name}</div>
+                          <div className="text-sm text-slate-400">{fmt(price)}원 × {quantity}개</div>
                         </div>
-                        <div className="cart-item-controls">
-                          <button className="quantity-button" onClick={() => handleDecrease(id)}>−</button>
-                          <button className="quantity-button" onClick={() => handleAddToCart(id)}>＋</button>
-                          <button className="remove-item-button" onClick={() => handleRemove(id)}>✕</button>
+                        <div className="flex items-center gap-2">
+                          <button className="py-0.5 px-2 rounded bg-slate-700 border-none text-white cursor-pointer hover:bg-slate-600" onClick={() => handleDecrease(id)}>−</button>
+                          <button className="py-0.5 px-2 rounded bg-slate-700 border-none text-white cursor-pointer hover:bg-slate-600" onClick={() => handleAddToCart(id)}>＋</button>
+                          <button className="text-xs py-0.5 px-2 rounded bg-red-900/50 text-red-300 ml-1 border-none cursor-pointer hover:bg-red-800" onClick={() => handleRemove(id)}>✕</button>
                         </div>
                       </li>
                     ))}
                   </ul>
-                  <div className="cart-total">
-                    총 금액: <span className="total-price-amount">{fmt(total)}원</span>
+                  <div className="mt-6 pt-4 border-t border-slate-700 text-right text-xl font-bold">
+                    총 금액: <span className="text-amber-400">{fmt(total)}원</span>
                   </div>
                 </>
               )}

@@ -3,12 +3,10 @@ import logo3 from "../image/logo3-removebg-preview.png";
 import { useNavigate } from "react-router-dom";
 import LoginModal from "./auth/LoginModal";
 import LoginApi from "../api/LoginApi";
-import "../css/NavVar.css"; // CSS 파일 import
 
-// 사용자 아이콘 SVG (className을 prop으로 받도록 수정)
 const UserIcon = ({ className }) => (
   <svg
-    xmlns="http://www.w.org/2000/svg"
+    xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24"
     fill="currentColor"
     className={className}
@@ -43,61 +41,57 @@ const NavVar = () => {
   }, []);
 
   return (
-    <nav className="nav-bar">
-      <div className="nav-container">
-        {/* 1. 왼쪽: 로고 */}
-        <a href="/" className="logo-link">
-          <img className="logo-image" src={logo3} alt="Cinema Logo" />
+    <nav className="sticky top-0 z-50 bg-black/80 backdrop-blur-sm border-b border-gray-800 shadow-lg">
+      <div className="flex justify-between items-center h-20 max-w-7xl mx-auto px-8">
+        <a href="/" className="flex-shrink-0">
+          <img className="h-12 w-auto" src={logo3} alt="Cinema Logo" />
         </a>
 
-        {/* 2. 중앙: 메인 메뉴 */}
-        <div className="main-menu">
+        <div className="flex items-center gap-10 text-gray-300 font-semibold">
           <button
             onClick={() => checkLogin(() => navigate("reservation"))}
-            className="menu-item"
+            className="transition-colors duration-300 ease-in-out hover:text-red-500"
           >
             예매
           </button>
-          <a href="/store" className="menu-item">
+          <a href="/store" className="transition-colors duration-300 ease-in-out hover:text-red-500">
             스토어
           </a>
-          <a href="/FAQ" className="menu-item">
+          <a href="/FAQ" className="transition-colors duration-300 ease-in-out hover:text-red-500">
             자주 묻는 질문
           </a>
-          <a href="/inquerylist" className="menu-item">
+          <a href="/inquerylist" className="transition-colors duration-300 ease-in-out hover:text-red-500">
             1대1 문의
           </a>
         </div>
 
-        {/* 3. 오른쪽: 사용자 메뉴 */}
-        <div className="user-menu">
+        <div className="flex items-center gap-4 text-sm font-medium">
           {!loginuser ? (
             <>
-              <button onClick={toggleModal} className="auth-button">
+              <button onClick={toggleModal} className="text-gray-400 transition-colors duration-300 ease-in-out hover:text-white">
                 로그인
               </button>
               <a
                 onClick={linkToRegisterList}
                 href="/registerList"
-                className="register-button"
+                className="text-white bg-red-600 px-4 py-2 rounded-md transition-all duration-300 ease-in-out hover:bg-red-700"
               >
                 회원가입
               </a>
             </>
           ) : (
             <>
-              <button onClick={logoutIdPassword} className="auth-button">
+              <button onClick={logoutIdPassword} className="text-gray-400 transition-colors duration-300 ease-in-out hover:text-white">
                 로그아웃
               </button>
-              <button onClick={goToMyPage} className="mypage-button">
-                <UserIcon className="user-icon" />
+              <button onClick={goToMyPage} className="flex items-center gap-2 text-gray-400 border border-gray-700 px-4 py-2 rounded-md transition-all duration-300 ease-in-out hover:border-gray-500 hover:text-white">
+                <UserIcon className="w-5 h-5" />
                 <span>{infotype()}</span>
               </button>
             </>
           )}
         </div>
       </div>
-      {/* 모달 렌더링 */}
       <LoginModal modal={modalOpen} r={toggleModal} />
     </nav>
   );

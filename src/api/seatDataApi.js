@@ -101,27 +101,37 @@ export const seatApi = () => {
     }
   };
 
-  const renderSeatBtn = (seat) => {
-    const classes = `seat ${seat.reserved
-        ? "reserved"
-        : selectedSeats.includes(seat.id)
-          ? "selected"
-          : "available"
-      } ${seat.type === "disabled" ? "accessible-seat" : ""}`;
-    return (
-      <button
-        key={seat.id}
-        className={classes}
-        disabled={seat.reserved}
-        onClick={() => clickHandler(seat)}
-        title={`${seat.id}${seat.type === "disabled" ? " (장애인석)" : ""}`}
-        aria-label={`${seat.id}${seat.type === "disabled" ? " (장애인석)" : ""
-          }`}
-      >
-        {seat.type === "disabled" ? <FaWheelchair /> : seat.id}
-      </button>
-    );
-  };
+ const renderSeatBtn = (seat) => {
+  const isSelected = selectedSeats.includes(seat.id);
+  const isReserved = seat.reserved;
+  const isDisabled = seat.type === "disabled";
+
+  const baseClass = "w-9 h-8 rounded-md text-xs font-bold flex items-center justify-center transition transform shadow-md";
+  const defaultClass = isReserved
+    ? "bg-gray-700 text-gray-400 cursor-not-allowed shadow-none"
+    : isSelected
+      ? "bg-red-500 text-white shadow-[0_8px_18px_rgba(239,68,68,0.35)]"
+      : "bg-white text-gray-900 hover:bg-green-500 hover:text-white hover:scale-105 hover:-translate-y-[2px]";
+  const accessibleClass = isDisabled
+    ? "bg-sky-300 outline-dashed outline-2 outline-blue-400 shadow-[0_0_0_3px_rgba(96,165,250,0.25),0_6px_18px_rgba(59,130,246,0.25)]"
+    : "";
+
+  const seatClass = `${baseClass} ${defaultClass} ${accessibleClass}`;
+
+  return (
+    <button
+      key={seat.id}
+      className={seatClass}
+      disabled={isReserved}
+      onClick={() => clickHandler(seat)}
+      title={`${seat.id}${isDisabled ? " (장애인석)" : ""}`}
+      aria-label={`${seat.id}${isDisabled ? " (장애인석)" : ""}`}
+    >
+      {isDisabled ? <FaWheelchair className="text-sm" /> : seat.id}
+    </button>
+  );
+};
+
 
   return {
     seatData,

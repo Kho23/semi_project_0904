@@ -1,18 +1,17 @@
 import React from "react";
 import { FAQDatas } from "../api/FAQDatas";
 import FAQItem from "../components/FAQItem";
-import '../css/FAQPage.css'; // CSS 파일 import
 
 const FAQPage = () => {
   const faqData = FAQDatas;
   return (
-    <div className="faq-page-container">
-      <div className="faq-content-wrapper">
-        <h3 className="faq-page-title">
+    <div className="bg-slate-900 min-h-screen text-slate-100 p-4 sm:p-8">
+      <div className="max-w-3xl mx-auto">
+        <h3 className="font-bold text-center mb-8 text-white text-3xl sm:text-4xl">
           자주 묻는 질문
         </h3>
         
-        <div className="faq-list">
+        <div className="bg-slate-800 rounded-lg shadow-md">
           {faqData.map((faq) => (
             <FAQItem 
               key={faq.id}
