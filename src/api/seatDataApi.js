@@ -24,30 +24,37 @@ export const createSeatData = () => {
   return seatData;
 };
 
-// 기존 로직을 담은 커스텀 훅
-// (React 규칙상 use로 시작하는 것이 좋지만, 기존 이름 그대로 seatApi로 유지)
 export const seatApi = () => {
-  // searchParams 로직을 훅 내부로 이동 (이것만 수정해야 정상 동작합니다)
   const [searchParams] = useSearchParams();
-
-  const loginUserData = localStorage.getItem("loginUser");
-
-  // --- 아래는 기존 코드와 100% 동일합니다 ---
+  //기본 좌석 정보를 담는 useState
   const [seatData, setSeatData] = useState(createSeatData());
+  //선택한 좌석정보를 담는 useState
   const [selectedSeats, setSelectedSeats] = useState([]);
+  //예매하기 위해 선택한 일반 예약 좌석 수를 담는 useState
   const [selectedNormalLimit, setSelectedNormalLimit] = useState(0);
+  //예매하기 위해 선택한 장애인 예약 좌석 수를 담는 useState
   const [selectedDisabledLimit, setSelectedDisabledLimit] = useState(0);
   const navigate = useNavigate();
+
+  //현재 localStorage에 저장된 로그인된 정보를 가져온다.
+  const loginUserData = localStorage.getItem("loginUser");
+
+  //좌석 클릭 시 발생하는 Handler
   const clickHandler = (seat) => {
+    //선택된 자석의 id와 type을 가져온다.
     const { id, type } = seat;
+    //만약 선택한 좌석이 이미 선택된 좌석이라면 그 자리를 제외하고 selectedSeats에 담는다.
+    //즉 이미 선택된 좌석을 다시 클릭하면 제외된다.
     if (selectedSeats.includes(id)) {
       setSelectedSeats(selectedSeats.filter((seatId) => seatId !== id));
       return;
     }
+    //만약 일반&장애인 예약할 수를 안고르면 alert이 뜬다.
     if (selectedDisabledLimit === 0 && selectedNormalLimit === 0) {
       alert("관람인원을 먼저 선택해 주세요");
       return;
     }
+    //만약 일반석만 고르고 장애인석을 고르지 않은 상태에서 장애인석을 고르면 alert이 뜬다.
     if (
       selectedNormalLimit > 0 &&
       selectedDisabledLimit === 0 &&
@@ -58,6 +65,7 @@ export const seatApi = () => {
       );
       return setSelectedSeats([]);
     }
+    //만약 장애인석만 고르고 일반석을 고르지 않은 상태에서 일반석을 고르면 alert이 뜬다.
     if (
       selectedDisabledLimit > 0 &&
       selectedNormalLimit === 0 &&
@@ -66,6 +74,7 @@ export const seatApi = () => {
       alert("일반석은 선택할 수 없습니다.");
       return setSelectedSeats([]);
     }
+
     const normalCount = selectedSeats.filter(
       (id) => seatData.find((s) => s.id === id).type === "normal"
     ).length;

@@ -4,13 +4,17 @@ const MyreservationPage = () => {
   const [myReservationData, setMyReservationData] = useState([]);
 
   useEffect(() => {
+    //loginUser(로그인정보)를 localStorage에서 가져온다.
     const localloginData = localStorage.getItem("loginUser");
+    //내가 예매한 영화정보를 localStorage에서 가져온다.
     const localmovieData = localStorage.getItem("myMovieData");
 
+    //localStorage에 data가 있을때만 실행한다.(디버그 방지)
     if (localloginData && localmovieData) {
       const loginData = JSON.parse(localloginData);
       const movieData = JSON.parse(localmovieData);
 
+      //movieData에서 로그인된 ID만 찾아 예약된 영화 내역을 myReservationData에 저장한다.
       const filteredData = movieData.filter(
         (reservation) =>
           reservation[0] && reservation[0].id === loginData.user_id

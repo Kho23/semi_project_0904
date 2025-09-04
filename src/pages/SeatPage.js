@@ -24,8 +24,9 @@ const SeatPage = () => {
     selectHandler,
     renderSeatBtn,
   } = seatApi();
+
   useEffect(() => {
-    //localStorage에 저장한 값을 불러와 seatData에 담는다. 저장한 값이 없으면 기본데이터를 담는다.
+    //localStorage에 예약한 좌석정보를 불러와 seatData에 담는다. 저장한 값이 없으면 기본데이터를 담는다.
     const savedData = localStorage.getItem("reservedData");
     savedData ? setSeatData(JSON.parse(savedData)) : setSeatData(seatData);
   }, []);
