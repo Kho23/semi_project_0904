@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { FaWheelchair } from "react-icons/fa"; // FaWheelchair를 사용하므로 import 추가
 
 // 필요한 상수와 함수들은 그대로 둡니다.
@@ -29,19 +29,15 @@ export const createSeatData = () => {
 export const seatApi = () => {
   // searchParams 로직을 훅 내부로 이동 (이것만 수정해야 정상 동작합니다)
   const [searchParams] = useSearchParams();
-  const reservationData = {
-    date: searchParams.get("date"),
-    movie: searchParams.get("movie"),
-    theater: searchParams.get("theater"),
-    time: searchParams.get("time"),
-  };
+
+  const loginUserData = localStorage.getItem("loginUser");
 
   // --- 아래는 기존 코드와 100% 동일합니다 ---
   const [seatData, setSeatData] = useState(createSeatData());
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedNormalLimit, setSelectedNormalLimit] = useState(0);
   const [selectedDisabledLimit, setSelectedDisabledLimit] = useState(0);
-
+  const navigate = useNavigate();
   const clickHandler = (seat) => {
     const { id, type } = seat;
     if (selectedSeats.includes(id)) {
@@ -50,7 +46,7 @@ export const seatApi = () => {
     }
     if (selectedDisabledLimit === 0 && selectedNormalLimit === 0) {
       alert("관람인원을 먼저 선택해 주세요");
-      return setSelectedSeats([]);
+      return;
     }
     if (
       selectedNormalLimit > 0 &&
@@ -101,11 +97,27 @@ export const seatApi = () => {
         );
         setSeatData(updateData);
         localStorage.setItem("reservedData", JSON.stringify(updateData));
+
+        const prevData = JSON.parse(localStorage.getItem("myMovieData")) || [];
+        const newData = [...prevData, reservationData];
+        localStorage.setItem("myMovieData", JSON.stringify(newData));
+
         alert("예약이 완료되었습니다");
         navigate("/");
       }
     }
   };
+
+  const reservationData = [
+    {
+      date: searchParams.get("date"),
+      movie: searchParams.get("movie"),
+      theater: searchParams.get("theater"),
+      time: searchParams.get("time"),
+      id: JSON.parse(loginUserData).user_id,
+      seats: selectedSeats,
+    },
+  ];
 
   const renderSeatBtn = (seat) => {
     const classes = `seat ${

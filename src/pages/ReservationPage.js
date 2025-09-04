@@ -3,9 +3,18 @@ import "../css/ReservationPage.css";
 import ReservationApi from "../api/ReservationApi";
 
 const ReservationPage = () => {
-  const {movieList,theaterList,selectedTheater,setSelectedTheater,
-    date,title,setTheater,clickDate,clickTheater,clickTime
-  }=ReservationApi();
+  const {
+    movieList,
+    theaterList,
+    selectedTheater,
+    setSelectedTheater,
+    date,
+    title,
+    setTheater,
+    clickDate,
+    clickTheater,
+    clickTime,
+  } = ReservationApi();
 
   return (
     <div className="reservation-page-wrapper">

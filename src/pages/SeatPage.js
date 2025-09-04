@@ -32,6 +32,8 @@ const SeatPage = () => {
     savedData ? setSeatData(JSON.parse(savedData)) : setSeatData(seatData);
   }, []);
 
+  const [reservationData2, setReservationData2] = useState([]);
+
   return (
     <div>
       {/* 인원 선택 */}
@@ -55,7 +57,7 @@ const SeatPage = () => {
                     return;
                   }
                   if (selectedNormalLimit == i) {
-                    setSelectedNormalLimit([]);
+                    setSelectedNormalLimit(0);
                   } else setSelectedNormalLimit(newNormal);
                 }}
               >
@@ -83,7 +85,7 @@ const SeatPage = () => {
                     return;
                   }
                   if (selectedDisabledLimit == i) {
-                    setSelectedDisabledLimit([]);
+                    setSelectedDisabledLimit(0);
                   } else setSelectedDisabledLimit(newDisabled);
                 }}
               >
@@ -150,9 +152,9 @@ const SeatPage = () => {
             </div>
           </div>
 
-          <Link to="/" onClick={selectHandler}>
+          <button className="red-button" onClick={selectHandler}>
             선택완료
-          </Link>
+          </button>
         </div>
         {/* 오른쪽: 영화 정보 */}
         <div className="info-card">
@@ -161,18 +163,18 @@ const SeatPage = () => {
             {/* --- 영화 제목 영역 --- */}
             <div className="movie-title-row">
               <span className="age-rating">15</span>
-              <span className="movie-title">{reservationData.movie}</span>
+              <span className="movie-title">{reservationData[0].movie}</span>
             </div>
             <p className="movie-format">2D (자막)</p>
 
             {/* --- 상세 정보 영역 (그리드) --- */}
             <div className="movie-info-grid">
               <span>영화관</span>
-              <span>{reservationData.theater}</span>
+              <span>{reservationData[0].theater}</span>
               <span>날짜</span>
-              <span>{reservationData.date}</span>
+              <span>{reservationData[0].date}</span>
               <span>시간</span>
-              <span>{reservationData.time}</span>
+              <span>{reservationData[0].time}</span>
             </div>
 
             {/* --- 선택 좌석 표시 영역 --- */}
