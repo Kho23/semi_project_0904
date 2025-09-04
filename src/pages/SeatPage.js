@@ -13,10 +13,19 @@ import { Link } from "react-router-dom";
 
 const SeatPage = () => {
   const {
-    seatData, setSeatData, selectedSeats, setSelectedSeats, selectedNormalLimit,
-    setSelectedNormalLimit, selectedDisabledLimit, setSelectedDisabledLimit,
-    reservationData, clickHandler, selectHandler, renderSeatBtn
-  } = seatApi()
+    seatData,
+    setSeatData,
+    selectedSeats,
+    setSelectedSeats,
+    selectedNormalLimit,
+    setSelectedNormalLimit,
+    selectedDisabledLimit,
+    setSelectedDisabledLimit,
+    reservationData,
+    clickHandler,
+    selectHandler,
+    renderSeatBtn,
+  } = seatApi();
   useEffect(() => {
     //localStorage에 저장한 값을 불러와 seatData에 담는다. 저장한 값이 없으면 기본데이터를 담는다.
     const savedData = localStorage.getItem("reservedData");
@@ -34,8 +43,9 @@ const SeatPage = () => {
             {selectedNum.map((i) => (
               <button
                 key={i}
-                className={`people-btn ${selectedNormalLimit === Number(i) ? "active" : ""
-                  }`}
+                className={`people-btn ${
+                  selectedNormalLimit === Number(i) ? "active" : ""
+                }`}
                 onClick={() => {
                   const newNormal = Number(i);
                   if (newNormal + selectedDisabledLimit > 8) {
@@ -44,7 +54,9 @@ const SeatPage = () => {
                     setSelectedDisabledLimit(0);
                     return;
                   }
-                  setSelectedNormalLimit(newNormal);
+                  if (selectedNormalLimit == i) {
+                    setSelectedNormalLimit([]);
+                  } else setSelectedNormalLimit(newNormal);
                 }}
               >
                 {i}
@@ -59,8 +71,9 @@ const SeatPage = () => {
             {selectedNum.map((i) => (
               <button
                 key={i}
-                className={`people-btn ${selectedDisabledLimit === Number(i) ? "active" : ""
-                  }`}
+                className={`people-btn ${
+                  selectedDisabledLimit === Number(i) ? "active" : ""
+                }`}
                 onClick={() => {
                   const newDisabled = Number(i);
                   if (selectedNormalLimit + newDisabled > 8) {
@@ -69,7 +82,9 @@ const SeatPage = () => {
                     setSelectedDisabledLimit(0);
                     return;
                   }
-                  setSelectedDisabledLimit(newDisabled);
+                  if (selectedDisabledLimit == i) {
+                    setSelectedDisabledLimit([]);
+                  } else setSelectedDisabledLimit(newDisabled);
                 }}
               >
                 {i}
@@ -167,9 +182,9 @@ const SeatPage = () => {
                 {selectedSeats.length > 0
                   ? selectedSeats.map((seat) => <span>{seat}</span>)
                   : // 선택된 좌석이 없을 때 표시할 내용
-                  Array.from({ length: 6 }).map((_, index) => (
-                    <span key={index}>-</span>
-                  ))}
+                    Array.from({ length: 6 }).map((_, index) => (
+                      <span key={index}>-</span>
+                    ))}
               </div>
             </div>
           </div>

@@ -88,26 +88,33 @@ export const seatApi = () => {
   };
 
   const selectHandler = () => {
-    if (window.confirm("선택한 좌석으로 예약하시겠습니까?")) {
-      const updateData = seatData.map((i) =>
-        selectedSeats.includes(i.id) ? { ...i, reserved: true } : i
+    if (selectedNormalLimit + selectedDisabledLimit != selectedSeats.length) {
+      alert(
+        "예약 인원 수와 선택한 좌석 수가 다릅니다. 좌석을 모두 선택해주세요."
       );
-      setSeatData(updateData);
-      localStorage.setItem("reservedData", JSON.stringify(updateData));
-      alert("예약이 완료되었습니다");
-      setSelectedNormalLimit([]);
-      setSelectedDisabledLimit([]);
       setSelectedSeats([]);
+    } else {
+      if (window.confirm("선택한 좌석으로 예약하시겠습니까?")) {
+        //예약 재확인 alert이 뜨고 예를 누르면 예약상태가 바뀌고 그 값을 localStorage에 저장한다.
+        const updateData = seatData.map((i) =>
+          selectedSeats.includes(i.id) ? { ...i, reserved: true } : i
+        );
+        setSeatData(updateData);
+        localStorage.setItem("reservedData", JSON.stringify(updateData));
+        alert("예약이 완료되었습니다");
+        navigate("/");
+      }
     }
   };
 
   const renderSeatBtn = (seat) => {
-    const classes = `seat ${seat.reserved
+    const classes = `seat ${
+      seat.reserved
         ? "reserved"
         : selectedSeats.includes(seat.id)
-          ? "selected"
-          : "available"
-      } ${seat.type === "disabled" ? "accessible-seat" : ""}`;
+        ? "selected"
+        : "available"
+    } ${seat.type === "disabled" ? "accessible-seat" : ""}`;
     return (
       <button
         key={seat.id}
@@ -115,8 +122,9 @@ export const seatApi = () => {
         disabled={seat.reserved}
         onClick={() => clickHandler(seat)}
         title={`${seat.id}${seat.type === "disabled" ? " (장애인석)" : ""}`}
-        aria-label={`${seat.id}${seat.type === "disabled" ? " (장애인석)" : ""
-          }`}
+        aria-label={`${seat.id}${
+          seat.type === "disabled" ? " (장애인석)" : ""
+        }`}
       >
         {seat.type === "disabled" ? <FaWheelchair /> : seat.id}
       </button>
