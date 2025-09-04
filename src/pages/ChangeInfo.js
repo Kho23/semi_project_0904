@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { FiEdit3 } from "react-icons/fi";
 import ChangeInfoApi from "../api/ChangeInfoApi";
 
-
 const ChangeInfo = () => {
-  const { editInfoPassword, editInfoBirth } = ChangeInfoApi();
+  const { editInfoPassword, editInfoBirth, finishEdit } = ChangeInfoApi();
   const [loginUser, setloginUser] = useState({});
 
   useEffect(() => {
@@ -71,7 +70,12 @@ const ChangeInfo = () => {
             <input
               type="email"
               id="changeEmail"
-              placeholder={loginUser.user_email}
+              name="user_email" // name 속성 추가
+              value={loginUser.user_email}
+              onChange={(e) => {
+                const { name, value } = e.target;
+                setloginUser((i) => ({ ...i, [name]: value }));
+              }}
               required
             />
           </div>
@@ -87,6 +91,7 @@ const ChangeInfo = () => {
             />
           </div>
         </li>
+        <button onClick={finishEdit}>수정 완료</button>
       </ul>
     </div>
   );

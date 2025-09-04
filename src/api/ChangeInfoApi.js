@@ -12,7 +12,11 @@ const ChangeInfoApi = () => {
     navigate("/");
   };
 
-  return { editInfoPassword, editInfoBirth, navigate };
+  const finishEdit = () => {
+    navigate("/myPage");
+  }
+
+  return { editInfoPassword, editInfoBirth, finishEdit, navigate };
 };
 
 export default ChangeInfoApi;
