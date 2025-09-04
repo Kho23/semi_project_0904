@@ -4,8 +4,24 @@ import { useNavigate } from "react-router-dom";
 
 export const useCart = () => {
   const [productData] = useState(products); // 스토어 상품 더미데이터 가져와서 productData 초기값으로 설정
-  const [cart, setCart] = useState([]); // 장바구니 state
   const navigate = useNavigate();
+  const [cart, setCart] = useState(() => {
+    try {
+      // 현재 로그인한 유저와 전체 유저 정보를 가져옴
+      const currentUser = JSON.parse(localStorage.getItem("loginUser")); //현재 로그인중인 유저 정보
+      const allUsers = JSON.parse(localStorage.getItem("storageinfo")); // 전체 유저 정보
+
+      if (currentUser && allUsers) { //위 두개가 존재한다면 
+        const savedCart = allUsers.find( //전체 유저 정보에서 현재 유저 정보를 찾아서 카트만 꺼냄
+          (user) => user.user_id === currentUser.user_id
+        )?.cart;
+        return savedCart || []; // 장바구니 반환 장바구니에 담긴 제품이 없으면 빈 장바구니 반환
+      }
+    } catch (error) { //에러 잡힌 경우 실행
+      console.error("장바구니 로딩 중 오류 발생:", error);
+    }
+    return []; // 로그인 정보가 없거나 오류 발생 시 빈 배열로 시작
+  }); //카트를 현재 로그인된 유저의 카트 정보로 설정해준다.
 
   const handleAddToCart = (productId) => {
     //장바구니 담기 버튼 클릭하면 실행되는 함수 버튼 눌린 객체의 id 를 받아옴
@@ -52,19 +68,18 @@ export const useCart = () => {
   );
   // 상태와 함수들을 객체로 묶어서 반환
   const handlePurchase = () => {
-    const user = JSON.parse(localStorage.getItem('loginUser'))
-    const allUser = JSON.parse(localStorage.getItem('storageinfo'))
-    allUser.map(userInfo=>{
-      if(userInfo.id==user.id){
-        userInfo.cart=cart
-      }else{
-        return userInfo
+    const user = JSON.parse(localStorage.getItem("loginUser"));
+    const allUser = JSON.parse(localStorage.getItem("storageinfo"));
+    const updatedAllUser=allUser.map((userInfo) => {
+      if (userInfo.user_id == user.user_id) {
+        userInfo.cart = cart;
+      } else {
+        return userInfo;
       }
-    }
-     )
-    localStorage. setItem('storageinfo',JSON.stringify(allUser))
-    alert('장바구니에 저장되었습니다.')
-    navigate('/purchase')
+    });
+    localStorage.setItem("storageinfo", JSON.stringify(updatedAllUser));
+    alert("장바구니에 저장되었습니다.");
+    navigate("/purchase");
   };
 
   return {
@@ -75,5 +90,6 @@ export const useCart = () => {
     handleRemove,
     total,
     handlePurchase,
+    setCart,
   };
 };

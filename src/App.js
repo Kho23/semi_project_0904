@@ -14,6 +14,7 @@ import { infoContext } from "./api/ContextApi";
 import MyPage from "./pages/MyPage";
 import ReservationPage from "./pages/ReservationPage";
 import SeatPage from "./pages/SeatPage";
+import PurchsePage from "./pages/PurchsePage";
 
 function App() {
   const forSet = JSON.parse(localStorage.getItem("loginUser")) || null;
@@ -41,6 +42,7 @@ function App() {
             <Route path="/myPage" element={<MyPage />} />
             <Route path="/reservation" element={<ReservationPage />} />
             <Route path="/seat" element={<SeatPage />} />
+            <Route path="/purchase" element={<PurchsePage />} />
           </Routes>
           <Footer />
         </BrowserRouter>

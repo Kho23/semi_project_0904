@@ -14,7 +14,7 @@ const StorePage = () => {
     total,
     handlePurchase,
   } = useCart();
-  const fmt = (n) => n.toLocaleString("ko-KR");
+  // const fmt = (n) => n.toLocaleString("ko-KR");
 
   useEffect(() => {
     const forSet = JSON.parse(localStorage.getItem("loginUser"));
@@ -52,7 +52,7 @@ const StorePage = () => {
                   {i.description}
                 </p>
                 <p className="text-xl font-semibold text-amber-400 text-right">
-                  {fmt(i.price)}원
+                  {i.price}원
                 </p>
               </div>
               <button
@@ -95,7 +95,7 @@ const StorePage = () => {
                         <div>
                           <div className="font-semibold text-base">{name}</div>
                           <div className="text-sm text-slate-400">
-                            {fmt(price)}원 × {quantity}개
+                            {price}원 × {quantity}개
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
@@ -127,7 +127,7 @@ const StorePage = () => {
                       결제하러 가기
                     </button>
                     총 금액:{" "}
-                    <span className="text-amber-400">{fmt(total)}원</span>
+                    <span className="text-amber-400">{total}원</span>
                   </div>
                 </>
               )}
