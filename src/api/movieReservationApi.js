@@ -1,5 +1,6 @@
 const days = ["일", "월", "화", "수", "목", "금", "토"];
 
+//오늘 날짜 기준으로 7일을 불러오는 result에 배열로 담아주는 함수
 const getNext7Days = () => {
   const result = [];
   const today = new Date();
