@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MainPage from "../src/pages/MainPage";
 import Footer from "./pages/Footer";
-import SignUp from "./pages/SignUp";
 import NavVar from "./components/NavVar";
 import FAQPage from "./pages/FAQPage";
 import InqueryPage from "./pages/InqueryPage";
@@ -17,6 +16,7 @@ import SeatPage from "./pages/SeatPage";
 import PurchsePage from "./pages/PurchsePage";
 import MyreservationPage from "./pages/MyreservationPage";
 import ChangeInfo from "./pages/ChangeInfo";
+import SignUp from "./components/register/SignUp";
 
 function App() {
   const forSet = JSON.parse(localStorage.getItem("loginUser")) || null;
@@ -35,7 +35,10 @@ function App() {
             <Route path="/FAQ" element={<FAQPage />} />
             <Route path="/inquerylist" element={<InqueryPage />} />
             <Route path="/inquery" element={<Oneonone_inquery />} />
-            <Route path="/inquerylist/inquery/:inqueryId" element={<InqueryDetailPage />} />
+            <Route
+              path="/inquerylist/inquery/:inqueryId"
+              element={<InqueryDetailPage />}
+            />
             <Route path="/store" element={<StorePage />} />
             <Route path="/registerList" element={<RegisterList />} />
             <Route path="/myPage" element={<MyPage />} />
