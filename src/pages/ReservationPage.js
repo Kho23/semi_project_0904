@@ -1,5 +1,5 @@
-import { dates, movie } from "../api/movieReservationApi";
-import "../css/ReservationPage.css";
+import React from "react";
+import { dates } from "../api/movieReservationApi";
 import ReservationApi from "../api/ReservationApi";
 
 const ReservationPage = () => {
@@ -17,127 +17,82 @@ const ReservationPage = () => {
   } = ReservationApi();
 
   return (
-    <div className="reservation-page-wrapper">
-      <div className="reservation-container">
-        <div className="header">
-          <div className="tab-buttons">
-            <button className="tab active">빠른예매</button>
+    <div className="flex justify-center items-start min-h-screen bg-[radial-gradient(80%_100%_at_50%_0%,#2b2a40_0%,#1f1e2e_80%)] p-5 box-border">
+      <div className="flex flex-col w-[1200px] max-w-[95vw] bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="flex justify-start items-center px-5 bg-white border-b border-gray-200">
+          <div className="flex">
+            <button className="py-4 px-7 border-none bg-transparent cursor-pointer text-lg font-bold text-gray-400 transition-colors duration-300 ease-in-out relative overflow-hidden text-gray-800 border-b-3 border-blue-500">
+              빠른예매
+            </button>
           </div>
         </div>
 
-        <div className="main-content">
-          {/* 날짜 선택 섹션 */}
-          <div className="date-selection-panel">
-            <div className="date-picker-section">
-              <div className="date-list">
+        <div className="flex flex-grow border-t border-gray-200">
+          {/* 날짜 선택 */}
+          <div className="flex flex-col w-[15%] min-w-[120px] max-w-[180px] bg-white border-r border-gray-200 pb-2.5">
+            <div className="p-2.5 bg-gray-50 border-b border-gray-200">
+              <div className="grid grid-cols-1 gap-2 w-full">
                 {dates.map((d, index) => (
                   <button
                     key={index}
-                    className={`date-button ${
-                      date === d.label ? "selected" : ""
+                    className={`flex flex-col items-center justify-center h-16 border border-gray-200 bg-white cursor-pointer rounded-md transition-all duration-200 ease-in-out shadow-sm hover:bg-gray-100 hover:border-gray-300 hover:shadow-md ${
+                      date === d.label ? "border-2 border-blue-500 bg-blue-50 shadow-lg -translate-y-px text-black" : "text-gray-600"
                     }`}
                     onClick={() => clickDate(d.label)}
                   >
-                    <div className="day">
+                    <div className={`text-xs font-medium mb-0.5 ${date === d.label ? 'text-blue-500 font-bold' : 'text-gray-500'}`}>
                       {d.label.split("(")[1].replace(")", "")}
                     </div>
-                    <div className="date-number">{d.label.split(" ")[0]}</div>
+                    <div className={`text-xl font-bold leading-none ${date === d.label ? 'text-black font-extrabold' : ''}`}>
+                      {d.label.split(" ")[0]}
+                    </div>
                   </button>
                 ))}
               </div>
             </div>
           </div>
-
-          {/* 영화 목록 */}
-          <div className="column movie-list-panel">
-            <div className="column-header">
-              <h3>영화</h3>
-            </div>
-            <div className="scroll-area">
-              {movieList.length > 0 ? (
-                movieList.map((i) => {
-                  const { movieName } = i;
-                  return movieName.map((movieItem) => (
-                    <div
-                      key={movieItem.title}
-                      className={`movie-item ${
-                        title === movieItem.title ? "selected" : ""
-                      }`}
-                    >
-                      <button
-                        className="movie-button"
-                        onClick={() => {
-                          clickTheater(movieItem.title);
-                        }}
-                      >
-                        <span className="rating-badge">ALL</span>
-                        {movieItem.title}
-                      </button>
+          
+          {/* 영화, 상영관, 시간 선택 패널들 */}
+          {[
+            { title: "영화", flex: "flex-2 min-w-[250px]", data: movieList, render: (i) => i.movieName.map(movieItem => ({key: movieItem.title, name: movieItem.title, selected: title === movieItem.title, onClick: () => clickTheater(movieItem.title), badge: "ALL"})) },
+            { title: "상영관", flex: "flex-1.5 min-w-[180px]", data: theaterList[0]?.theaters, render: (theaterItem) => [{key: theaterItem.name, name: theaterItem.name, selected: selectedTheater?.name === theaterItem.name, onClick: () => {setSelectedTheater(theaterItem); setTheater(theaterItem.name);}}] },
+            { title: "시간", flex: "flex-1.5 min-w-[180px]", data: selectedTheater?.times, isTime: true }
+          ].map((panel, pIdx) => (
+            <div key={pIdx} className={`flex flex-col bg-white ${pIdx !== 2 ? 'border-r border-gray-200' : ''} ${panel.flex}`}>
+              <div className="p-4 bg-gray-50 border-b border-gray-200">
+                <h3 className="m-0 text-base font-bold">{panel.title}</h3>
+              </div>
+              <div className="overflow-y-auto flex-grow p-2.5">
+                {panel.data && panel.data.length > 0 ? (
+                  panel.isTime ? (
+                    <div className="grid grid-cols-[repeat(auto-fill,minmax(70px,1fr))] gap-2 p-2.5">
+                      {panel.data.map((time, index) => (
+                        <button key={index} className="py-2.5 px-1.5 border border-gray-300 bg-white rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-gray-200 hover:border-gray-400 hover:-translate-y-px" onClick={() => clickTime(time)}>
+                          {time}
+                        </button>
+                      ))}
                     </div>
-                  ));
-                })
-              ) : (
-                <div className="no-data">날짜를 선택해 주세요.</div>
-              )}
+                  ) : (
+                    panel.data.flatMap(panel.render).map(item => (
+                      <div key={item.key} className={`border-b border-gray-100 ${item.selected ? 'bg-blue-50 border-l-4 border-blue-500 -ml-1' : ''}`}>
+                        <button className="w-full text-left p-4 border-none bg-none cursor-pointer text-base flex items-center transition-colors duration-200 rounded-md font-medium hover:bg-gray-100 focus:outline-none" onClick={item.onClick}>
+                          {item.badge && <span className="text-xs bg-gray-600 text-white py-0.5 px-1.5 rounded-sm mr-2 font-normal">{item.badge}</span>}
+                          <span className={`${item.selected ? 'font-bold text-black' : ''}`}>{item.name}</span>
+                        </button>
+                      </div>
+                    ))
+                  )
+                ) : (
+                  <div className="text-center p-10 text-gray-400 text-sm leading-relaxed">{`
+                    ${pIdx === 0 ? '날짜를 선택해 주세요.' : ''}
+                    ${pIdx === 1 ? '영화 선택 후 상영관을 확인하세요.' : ''}
+                    ${pIdx === 2 ? '상영관 선택 후 시간을 확인하세요.' : ''}
+                  `}</div>
+                )}
+              </div>
             </div>
-          </div>
+          ))}
 
-          {/* 상영관 목록 */}
-          <div className="column theater-list-panel">
-            <div className="column-header">
-              <h3>상영관</h3>
-            </div>
-            <div className="scroll-area">
-              {theaterList[0]?.theaters?.length > 0 ? (
-                theaterList[0].theaters.map((theaterItem) => (
-                  <div
-                    key={theaterItem.name}
-                    className={`theater-item ${
-                      selectedTheater?.name === theaterItem.name
-                        ? "selected"
-                        : ""
-                    }`}
-                  >
-                    <button
-                      className="theater-button"
-                      onClick={() => {
-                        setSelectedTheater(theaterItem);
-                        setTheater(theaterItem.name);
-                      }}
-                    >
-                      {theaterItem.name}
-                    </button>
-                  </div>
-                ))
-              ) : (
-                <div className="no-data">영화 선택 후 상영관을 확인하세요.</div>
-              )}
-            </div>
-          </div>
-
-          {/* 시간 목록 */}
-          <div className="column time-list-panel">
-            <div className="column-header">
-              <h3>시간</h3>
-            </div>
-            <div className="scroll-area">
-              {selectedTheater && selectedTheater.times?.length > 0 ? (
-                <div className="time-grid">
-                  {selectedTheater.times.map((time, index) => (
-                    <button
-                      key={index}
-                      className="time-button"
-                      onClick={() => clickTime(time)}
-                    >
-                      {time}
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <div className="no-data">상영관 선택 후 시간을 확인하세요.</div>
-              )}
-            </div>
-          </div>
         </div>
       </div>
     </div>

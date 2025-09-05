@@ -10,12 +10,12 @@ const AcceptTab = () => {
   };
 
   return (
-    <div>
-      <p>가입을 축하드립니다.🎉</p>
-      <p>로그인 페이지로 돌아가 로그인을 완료해 주세요</p>  
+    <div className="text-center p-8">
+      <p className="text-2xl font-bold mb-2">가입을 축하드립니다.🎉</p>
+      <p className="text-gray-600">로그인 페이지로 돌아가 로그인을 완료해 주세요</p>
       <button
         onClick={tologin}
-        className="bg-blue-600 text-white px-4 py-2 rounded-md mt-2"
+        className="bg-blue-600 text-white px-4 py-2 rounded-md mt-4 font-semibold hover:bg-blue-700 transition-colors"
       >
         로그인하러 가기
       </button>
