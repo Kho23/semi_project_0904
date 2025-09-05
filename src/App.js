@@ -14,6 +14,7 @@ import { infoContext } from "./api/ContextApi";
 import MyPage from "./pages/MyPage";
 import ReservationPage from "./pages/ReservationPage";
 import SeatPage from "./pages/SeatPage";
+import MyreservationPage from "./pages/MyreservationPage";
 import ChangeInfo from "./pages/ChangeInfo";
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
             <Route path="/myPage/ChangeInfo" element={<ChangeInfo />} />
             <Route path="/reservation" element={<ReservationPage />} />
             <Route path="/seat" element={<SeatPage />} />
+            <Route path="/myPage/reservation" element={<MyreservationPage />} />
           </Routes>
           <Footer />
         </BrowserRouter>
