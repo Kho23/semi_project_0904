@@ -2,8 +2,10 @@ import React from "react";
 
 const PurchasePage = () => {
   // --- 사용자님이 작성하신 로직 (변경 없음) ---
-  const allUsers = JSON.parse(localStorage.getItem("storageinfo"));
+  const allUsers = JSON.parse(localStorage.getItem("storageinfo")) || [];
   const currentUser = JSON.parse(localStorage.getItem("loginUser"));
+  console.log(allUsers);
+  console.log(currentUser);
 
   const cartItem = allUsers.find(
     (userInfo) => userInfo.user_id === currentUser.user_id

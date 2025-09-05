@@ -4,11 +4,17 @@ import AcceptTab from "../register/AcceptTab";
 const SignUp = () => {
   // --- 모든 state와 로직을 SignUp.js로 통합 ---
 
-  // ✅ [수정 1] users의 초기값을 localStorage에서 올바르게 불러옵니다.
-  // 이것이 데이터 삭제 버그의 핵심 원인이었습니다.
+  // ✅ [수정] JSON.parse 오류가 발생하지 않도록 try-catch 구문을 추가합니다.
   const [users, setUsers] = useState(() => {
-    const savedUsers = localStorage.getItem("storageinfo");
-    return savedUsers ? JSON.parse(savedUsers) : [];
+    try {
+      const savedUsers = localStorage.getItem("storageinfo");
+      // 데이터가 있으면 파싱하고, 없으면 빈 배열([])을 반환합니다.
+      return savedUsers ? JSON.parse(savedUsers) : [];
+    } catch (error) {
+      // 파싱 중 오류가 발생하면 (데이터가 깨졌으면) 콘솔에 오류를 남기고 안전하게 빈 배열을 반환합니다.
+      console.error("Failed to parse users from localStorage", error);
+      return [];
+    }
   });
 
   const [newUser, setNewUser] = useState({
@@ -46,8 +52,8 @@ const SignUp = () => {
       alert("아이디를 입력해주세요.");
       return;
     }
-    // ✅ [수정 2] 'i.user_id'로 올바르게 비교합니다.
-    const isDuplicate = users.some(user => user.user_id === id);
+    // user 객체가 null인 경우를 대비해 안전하게 확인합니다.
+    const isDuplicate = users.some(user => user && user.user_id === id);
     if (isDuplicate) {
       alert("이미 존재하는 아이디입니다.");
       setId("");
@@ -72,8 +78,7 @@ const SignUp = () => {
     if (buttonCheck) {
       alert("회원가입이 완료되었습니다");
       setCompleted(true);
-      // ✅ [수정 3] 새로운 유저를 users 배열에 추가합니다.
-      // useEffect가 알아서 localStorage에 저장해줍니다.
+      // 새로운 유저를 users 배열에 추가합니다.
       setUsers((prevUsers) => [...prevUsers, newUser]);
     } else {
       alert("아이디 중복 확인을 해주세요.");
@@ -91,103 +96,102 @@ const SignUp = () => {
         onSubmit={finishSignup}
         className="max-w-md mx-auto my-10 p-7 rounded-xl bg-gradient-to-b from-white to-slate-100 shadow-lg sm:max-w-lg"
       >
-         {/* ... (이하 JSX 코드는 제공해주신 것과 동일) ... */}
-         {/* h1, ul, li, input, button 등 모든 UI 요소들 */}
-         <h1 className="text-center text-2xl font-bold text-gray-800 mb-6 tracking-wide">
-          회원정보를 입력해 주세요.
-        </h1>
-        <ul className="list-none p-0">
-          <li className="mb-4">
-            <div className="flex flex-col sm:flex-row gap-4 mt-2">
-              <div className="flex flex-col flex-1">
-                <label className="text-sm block mb-1">
-                  성<span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="user_lastname"
-                  onChange={changeHandler}
-                  required
-                  className="w-full p-2.5 text-sm mt-1 border border-gray-300 rounded-md box-border transition-all duration-200 ease-in-out focus:border-blue-500 focus:shadow-[0_0_5px_rgba(0,123,255,0.3)] focus:outline-none"
-                />
-              </div>
-              <div className="flex flex-col flex-1">
-                <label className="text-sm block mb-1">
-                  이름<span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="user_firstname"
-                  onChange={changeHandler}
-                  required
-                  className="w-full p-2.5 text-sm mt-1 border border-gray-300 rounded-md box-border transition-all duration-200 ease-in-out focus:border-blue-500 focus:shadow-[0_0_5px_rgba(0,123,255,0.3)] focus:outline-none"
-                />
-              </div>
-            </div>
-          </li>
-          {[
-            {label: "생년월일", id: "user_birth", type: "text", placeholder: "YYYYMMDD"},
-            {label: "아이디", id: "user_id", type: "text", placeholder: "영문, 숫자 조합(8 ~ 12자)"},
-            {label: "비밀번호", id: "user_password", type: "password"},
-            {label: "이메일", id: "user_email", type: "email", placeholder: "example@domain.com"},
-            {label: "휴대폰 번호", id: "user_telephone", type: "tel", placeholder: "01000000000"},
-          ].map(field => (
-          <li key={field.id} className="mb-4">
-            <label className="text-sm block mb-1">
-              {field.label}<span className="text-red-500">*</span>
-            </label>
-            <div className="flex items-center">
-              <input
-                type={field.type}
-                id={field.id}
-                placeholder={field.placeholder}
-                value={field.id === 'user_id' ? id : undefined}
-                onChange={field.id === 'user_id' ? (e) => {setId(e.target.value); changeHandler(e);} : changeHandler}
-                required
-                className="w-full p-2.5 text-sm mt-1 border border-gray-300 rounded-md box-border transition-all duration-200 ease-in-out focus:border-blue-500 focus:shadow-[0_0_5px_rgba(0,123,255,0.3)] focus:outline-none"
-              />
-              {field.id === 'user_id' && (
-                <button type="button" onClick={checkDouble} className="ml-2 px-3 py-1.5 text-sm text-white bg-cyan-500 border-none rounded-md cursor-pointer hover:bg-cyan-600 self-start mt-1">
-                  중복확인
-                </button>
-              )}
-            </div>
-            {field.id === 'user_email' && (
-              <div className="flex items-center gap-1 mt-2">
-                  <input type="checkbox" id="event_no" onClick={checkEventNo} className="mr-1.5"/>
-                  <label htmlFor="event_no" className="text-sm">혜택 메일 수신 안 함</label>
-              </div>
-            )}
-          </li>
-          ))}
-          <li className="mb-4">
-            <label className="text-sm block mb-1">
-              성별 선택<span className="text-red-500">*</span>
-            </label>
-            <div className="mt-2">
-              <label className="mr-4">
-                <input type="radio" name="user_gender" id="user_gender_M" onClick={checkMgender} className="mr-1.5" />
-                남자
-              </label>
-              <label>
-                <input type="radio" name="user_gender" id="user_gender_F" onClick={checkFgender} className="mr-1.5" />
-                여자
-              </label>
-            </div>
-          </li>
-        </ul>
-        <button type="submit" className="w-full mt-5 p-2.5 text-white bg-green-600 border-none rounded-md text-base font-semibold cursor-pointer hover:bg-green-700">
-          가입하기
-        </button>
-        <div className="block mt-4 text-center text-sm text-gray-600">
-          이미 있는 계정이라면?
-          <button type="button" className="w-full p-2.5 mt-2.5 bg-yellow-400 border-none rounded-md cursor-pointer hover:bg-yellow-500">
-            계정찾기
-          </button>
-        </div>
+        <h1 className="text-center text-2xl font-bold text-gray-800 mb-6 tracking-wide">
+          회원정보를 입력해 주세요.
+        </h1>
+        <ul className="list-none p-0">
+          <li className="mb-4">
+            <div className="flex flex-col sm:flex-row gap-4 mt-2">
+              <div className="flex flex-col flex-1">
+                <label className="text-sm block mb-1">
+                  성<span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="user_lastname"
+                  onChange={changeHandler}
+                  required
+                  className="w-full p-2.5 text-sm mt-1 border border-gray-300 rounded-md box-border transition-all duration-200 ease-in-out focus:border-blue-500 focus:shadow-[0_0_5px_rgba(0,123,255,0.3)] focus:outline-none"
+                />
+              </div>
+              <div className="flex flex-col flex-1">
+                <label className="text-sm block mb-1">
+                  이름<span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="user_firstname"
+                  onChange={changeHandler}
+                  required
+                  className="w-full p-2.5 text-sm mt-1 border border-gray-300 rounded-md box-border transition-all duration-200 ease-in-out focus:border-blue-500 focus:shadow-[0_0_5px_rgba(0,123,255,0.3)] focus:outline-none"
+                />
+              </div>
+            </div>
+          </li>
+          {[
+            { label: "생년월일", id: "user_birth", type: "text", placeholder: "YYYYMMDD" },
+            { label: "아이디", id: "user_id", type: "text", placeholder: "영문, 숫자 조합(8 ~ 12자)" },
+            { label: "비밀번호", id: "user_password", type: "password" },
+            { label: "이메일", id: "user_email", type: "email", placeholder: "example@domain.com" },
+            { label: "휴대폰 번호", id: "user_telephone", type: "tel", placeholder: "01000000000" },
+          ].map(field => (
+            <li key={field.id} className="mb-4">
+              <label className="text-sm block mb-1">
+                {field.label}<span className="text-red-500">*</span>
+              </label>
+              <div className="flex items-center">
+                <input
+                  type={field.type}
+                  id={field.id}
+                  placeholder={field.placeholder}
+                  value={field.id === 'user_id' ? id : undefined}
+                  onChange={field.id === 'user_id' ? (e) => { setId(e.target.value); changeHandler(e); } : changeHandler}
+                  required
+                  className="w-full p-2.5 text-sm mt-1 border border-gray-300 rounded-md box-border transition-all duration-200 ease-in-out focus:border-blue-500 focus:shadow-[0_0_5px_rgba(0,123,255,0.3)] focus:outline-none"
+                />
+                {field.id === 'user_id' && (
+                  <button type="button" onClick={checkDouble} className="ml-2 px-3 py-1.5 text-sm text-white bg-cyan-500 border-none rounded-md cursor-pointer hover:bg-cyan-600 self-start mt-1 whitespace-nowrap">
+                    중복확인
+                  </button>
+                )}
+              </div>
+              {field.id === 'user_email' && (
+                <div className="flex items-center gap-1 mt-2">
+                    <input type="checkbox" id="event_no" onClick={checkEventNo} className="mr-1.5"/>
+                    <label htmlFor="event_no" className="text-sm">혜택 메일 수신 안 함</label>
+                </div>
+              )}
+            </li>
+          ))}
+          <li className="mb-4">
+            <label className="text-sm block mb-1">
+              성별 선택<span className="text-red-500">*</span>
+            </label>
+            <div className="mt-2">
+              <label className="mr-4">
+                <input type="radio" name="user_gender" id="user_gender_M" onClick={checkMgender} className="mr-1.5" />
+                남자
+              </label>
+              <label>
+                <input type="radio" name="user_gender" id="user_gender_F" onClick={checkFgender} className="mr-1.5" />
+                여자
+              </label>
+            </div>
+          </li>
+        </ul>
+        <button type="submit" className="w-full mt-5 p-2.5 text-white bg-green-600 border-none rounded-md text-base font-semibold cursor-pointer hover:bg-green-700">
+          가입하기
+        </button>
+        <div className="block mt-4 text-center text-sm text-gray-600">
+          이미 있는 계정이라면?
+          <button type="button" className="w-full p-2.5 mt-2.5 bg-yellow-400 border-none rounded-md cursor-pointer hover:bg-yellow-500">
+            계정찾기
+          </button>
+        </div>
       </form>
     </div>
   );
 };
 
 export default SignUp;
+

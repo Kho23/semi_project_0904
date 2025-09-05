@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useCart } from "../api/useCart";
 import LoginApi from "../api/LoginApi";
 import LoginModal from "../components/auth/LoginModal";
+import CategorySection from "../components/CategorySection";
 
 const StorePage = () => {
   const { checkLogin, modalOpen, toggleModal, setLoginuser } = LoginApi();
@@ -14,7 +15,6 @@ const StorePage = () => {
     total,
     handlePurchase,
   } = useCart();
-  // const fmt = (n) => n.toLocaleString("ko-KR");
 
   useEffect(() => {
     const forSet = JSON.parse(localStorage.getItem("loginUser"));
@@ -23,57 +23,32 @@ const StorePage = () => {
     }
   }, []);
 
-  const CategorySection = ({ title, type }) => (
-    <section className="mb-16">
-      <h3 className="text-3xl font-bold text-amber-400 border-b-2 border-slate-700 pb-4 mb-8">
-        {title}
-      </h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {productData
-          .filter((i) => i.type === type)
-          .map((i) => (
-            <div
-              key={i.id}
-              className="bg-slate-800 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2 flex flex-col"
-            >
-              <img
-                src={
-                  i.image ||
-                  "https://via.placeholder.com/300x200.png?text=No+Image"
-                }
-                alt={i.name}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-5 flex flex-col flex-grow">
-                <h4 className="text-lg font-bold text-white mb-2 truncate">
-                  {i.name}
-                </h4>
-                <p className="text-sm text-slate-400 mb-4 flex-grow">
-                  {i.description}
-                </p>
-                <p className="text-xl font-semibold text-amber-400 text-right">
-                  {i.price}원
-                </p>
-              </div>
-              <button
-                className="w-full p-3 bg-amber-400 text-slate-900 font-semibold cursor-pointer transition-colors duration-200 hover:bg-amber-300"
-                onClick={() => checkLogin(() => handleAddToCart(i.id))}
-              >
-                장바구니 담기
-              </button>
-            </div>
-          ))}
-      </div>
-    </section>
-  );
-
   return (
     <div className="bg-slate-900 min-h-screen text-slate-100 p-4 sm:p-8">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
         <main className="w-full lg:w-2/3">
-          <CategorySection title="🍿 음식" type="food" />
-          <CategorySection title="🥤 음료" type="drink" />
-          <CategorySection title="🎬 굿즈" type="goods" />
+          {/* ✅ 분리된 CategorySection 컴포넌트를 사용하고 props를 전달합니다. */}
+          <CategorySection
+            title="🍿 음식"
+            type="food"
+            productData={productData}
+            checkLogin={checkLogin}
+            handleAddToCart={handleAddToCart}
+          />
+          <CategorySection
+            title="🥤 음료"
+            type="drink"
+            productData={productData}
+            checkLogin={checkLogin}
+            handleAddToCart={handleAddToCart}
+          />
+          <CategorySection
+            title="🎬 굿즈"
+            type="goods"
+            productData={productData}
+            checkLogin={checkLogin}
+            handleAddToCart={handleAddToCart}
+          />
         </main>
 
         <aside className="w-full lg:w-1/3">
@@ -122,12 +97,21 @@ const StorePage = () => {
                     ))}
                   </ul>
 
-                  <div className="mt-6 pt-4 border-t border-slate-700 text-right text-xl font-bold">
-                    <button onClick={() => handlePurchase()}>
+                  <div className="mt-6 pt-4 border-t border-slate-700">
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="text-lg font-medium text-slate-300">
+                        총 금액
+                      </span>
+                      <span className="text-2xl font-bold text-amber-400">
+                        {total}원
+                      </span>
+                    </div>
+                    <button
+                      onClick={handlePurchase}
+                      className="w-full p-3 bg-amber-400 text-slate-900 font-bold text-lg rounded-lg transition-colors duration-200 hover:bg-amber-300 shadow-lg hover:shadow-amber-400/30"
+                    >
                       결제하러 가기
                     </button>
-                    총 금액:{" "}
-                    <span className="text-amber-400">{total}원</span>
                   </div>
                 </>
               )}
@@ -141,3 +125,4 @@ const StorePage = () => {
 };
 
 export default StorePage;
+

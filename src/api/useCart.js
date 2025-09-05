@@ -70,11 +70,11 @@ export const useCart = () => {
   const handlePurchase = () => {
     const user = JSON.parse(localStorage.getItem("loginUser"));
     const allUser = JSON.parse(localStorage.getItem("storageinfo"));
-    const updatedAllUser=allUser.map((userInfo) => {
-      if (userInfo.user_id == user.user_id) {
-        userInfo.cart = cart;
+    const updatedAllUser=allUser.map((userInfo) => { 
+      if (userInfo && userInfo.user_id == user.user_id) {
+        return {...userInfo, cart:cart}
       } else {
-        return userInfo;
+        return userInfo && userInfo;
       }
     });
     localStorage.setItem("storageinfo", JSON.stringify(updatedAllUser));

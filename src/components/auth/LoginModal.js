@@ -17,7 +17,7 @@ const LoginModal = ({ modal, r }) => {
   
   const loginIdPassword = () => {
     const storageinfo = JSON.parse(localStorage.getItem("storageinfo")) || [];
-    const findinfo = storageinfo.find((i) => i.user_id === id && i.user_password === password);
+    const findinfo = storageinfo.find((i) =>i && i.user_id === id && i.user_password === password);
 
     if(findinfo) {
       localStorage.setItem("loginUser", JSON.stringify(findinfo));
