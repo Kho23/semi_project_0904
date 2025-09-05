@@ -6,7 +6,8 @@ const OneOnOneInquiry = () => {
   const { inquiry,
     setInquiry,
     handleChange,
-    handleSubmit, } = OneononeinqueryApi()
+    handleSubmit, 
+  backToInqueryList} = OneononeinqueryApi()
 
   return (
     // 전체 폼을 감싸는 컨테이너
@@ -50,6 +51,7 @@ const OneOnOneInquiry = () => {
         {/* 제출 버튼 */}
         <div className="flex justify-end pt-2">
           <button
+          onClick={()=>backToInqueryList()}
             type="submit"
             className="text-white bg-red-600 hover:bg-red-700 font-bold py-2 px-6 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
           >
