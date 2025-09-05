@@ -9,7 +9,6 @@ import { RiCoupon2Line } from "react-icons/ri";
 import { RiQuestionAnswerLine } from "react-icons/ri";
 import { RiFileList3Line, RiCoinsLine } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
-import "../css/MyPage.css";
 
 const MyPage = () => {
   const [loginuser, setLoginuser] = useState("");

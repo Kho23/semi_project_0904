@@ -1,4 +1,3 @@
-import "../css/SignUp.css";
 import AcceptTab from "../components/register/AcceptTab";
 
 

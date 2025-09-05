@@ -2,124 +2,155 @@ import React, { useEffect } from "react";
 import { rowNames } from "../api/seatDataApi";
 import { FaWheelchair } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { seatApi } from "../api/seatDataApi"; // seatApi import
+import { seatApi } from "../api/seatDataApi";
 
 const SeatPage = () => {
   const {
     seatData, setSeatData, selectedSeats, selectedNormalLimit,
     setSelectedNormalLimit, selectedDisabledLimit, setSelectedDisabledLimit,
-    reservationData, renderSeatBtn, selectHandler
+    reservationData, renderSeatBtn
   } = seatApi();
 
   useEffect(() => {
     const savedData = localStorage.getItem("reservedData");
-    savedData ? setSeatData(JSON.parse(savedData)) : setSeatData(seatData);
-  }, []);
+    if (savedData) {
+      setSeatData(JSON.parse(savedData));
+    }
+  }, [setSeatData]);
 
   const selectedNum = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
-  return (
-    <div className="font-sans text-white py-7 px-5 bg-[radial-gradient(80%_100%_at_50%_0%,#2b2a40_0%,#1f1e2e_80%)]">
-      {/* 인원 선택 */}
-      <div className="people-container">
-        {/* 일반 */}
-        <div className="people-row">
-          <span className="people-label">일반석</span>
-          <div className="people-buttons">
-            {selectedNum.map((i) => (
-              <button
-                key={i}
-                className={`people-btn ${
-                  selectedNormalLimit === Number(i) ? "active" : ""
-                }`}
-                onClick={() => {
-                  const newNormal = Number(i);
-                  if (newNormal + selectedDisabledLimit > 8) {
-                    alert("총 8명 이하로 선택 가능합니다.");
-                    setSelectedNormalLimit(0);
-                    setSelectedDisabledLimit(0);
-                    return;
-                  }
-                  if (selectedNormalLimit == i) {
-                    setSelectedNormalLimit(0);
-                  } else setSelectedNormalLimit(newNormal);
-                }}
-              >
-                {i}
-              </button>
-            ))}
-          </div>
-        </div>
-        {/* 장애인 */}
-        <div className="people-row">
-          <span className="people-label">장애인석</span>
-          <div className="people-buttons">
-            {selectedNum.map((i) => (
-              <button
-                key={i}
-                className={`people-btn ${
-                  selectedDisabledLimit === Number(i) ? "active" : ""
-                }`}
-                onClick={() => {
-                  const newDisabled = Number(i);
-                  if (selectedNormalLimit + newDisabled > 8) {
-                    alert("총 8명 이하로 선택 가능합니다.");
-                    setSelectedNormalLimit(0);
-                    setSelectedDisabledLimit(0);
-                    return;
-                  }
-                  if (selectedDisabledLimit == i) {
-                    setSelectedDisabledLimit(0);
-                  } else setSelectedDisabledLimit(newDisabled);
-                }}
-              >
-                {i}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+  const handlePersonSelect = (type, value) => {
+    const newNormal = type === 'normal' ? value : selectedNormalLimit;
+    const newDisabled = type === 'disabled' ? value : selectedDisabledLimit;
+    
+    if (newNormal + newDisabled > 8) {
+      alert("총 8명 이하로 선택 가능합니다.");
+      setSelectedNormalLimit(0);
+      setSelectedDisabledLimit(0);
+      return;
+    }
+    
+    if (type === 'normal') {
+      setSelectedNormalLimit(selectedNormalLimit === value ? 0 : value);
+    } else {
+      setSelectedDisabledLimit(selectedDisabledLimit === value ? 0 : value);
+    }
+  };
 
-      <div className="flex justify-center items-start gap-7 w-fit mx-auto">
-        <div className="flex flex-col items-center w-max">
-          <div className="bg-gradient-to-b from-gray-500 to-gray-700 h-16 w-full max-w-2xl mb-6 flex items-center justify-center text-gray-200 text-lg font-semibold tracking-wider rounded-lg shadow-[0_18px_60px_rgba(255,255,255,0.18)] uppercase">
-            screen
+  const renderSeatBtnCustom = (seat) => {
+    const isSelected = selectedSeats.includes(`${seat.row}${seat.number}`);
+    const isReserved = seat.reserved;
+    const isDisabled = seat.disabled;
+
+    let seatClass = "";
+    if (isReserved) {
+      seatClass = "bg-gray-700 text-gray-400 cursor-not-allowed";
+    } else if (isSelected) {
+      seatClass = "bg-red-500 text-white shadow-md";
+    } else {
+      seatClass = "bg-white text-gray-900 border border-gray-300 hover:bg-gray-200 transition-colors duration-150";
+    }
+    
+    const seatStyle = {
+      width: '32px',
+      height: '32px',
+      margin: '1px',
+    };
+
+    return (
+      <button
+        key={`${seat.row}${seat.number}`}
+        className={`relative rounded-md text-sm font-semibold flex items-center justify-center ${seatClass}`}
+        style={seatStyle}
+        onClick={() => !isReserved && renderSeatBtn(seat)}
+      >
+        {isDisabled && (
+          <FaWheelchair className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-blue-400 ${isReserved ? 'text-gray-500' : ''}`} />
+        )}
+        {!isDisabled && seat.number}
+      </button>
+    );
+  };
+
+  return (
+    <div className="font-sans text-white p-6 bg-[radial-gradient(80%_100%_at_50%_0%,#2b2a40_0%,#1f1e2e_80%)] min-h-screen flex justify-center items-start">
+      <div className="flex flex-col lg:flex-row gap-8 w-full max-w-6xl mx-auto">
+        {/* 좌측: 인원 선택 및 좌석 */}
+        <div className="flex flex-col items-center w-full lg:w-3/4">
+          {/* 인원 선택 섹션 */}
+          <div className="bg-[#242337] p-5 rounded-lg shadow-lg w-full mb-8 flex justify-center flex-wrap gap-x-12 gap-y-4">
+            <div className="flex items-center gap-4">
+              <span className="people-label min-w-[70px] text-gray-300">일반석</span>
+              <div className="flex flex-wrap gap-2">
+                {selectedNum.map((i) => (
+                  <button
+                    key={i}
+                    className={`people-btn transition-all duration-200 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                      selectedNormalLimit === i ? "bg-red-500 text-white shadow-md" : "bg-gray-700 text-gray-300 hover:bg-red-400 hover:text-white"
+                    }`}
+                    onClick={() => handlePersonSelect('normal', i)}
+                  >
+                    {i}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="people-label min-w-[70px] text-gray-300">장애인석</span>
+              <div className="flex flex-wrap gap-2">
+                {selectedNum.map((i) => (
+                  <button
+                    key={i}
+                    className={`people-btn transition-all duration-200 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                      selectedDisabledLimit === i ? "bg-red-500 text-white shadow-md" : "bg-gray-700 text-gray-300 hover:bg-red-400 hover:text-white"
+                    }`}
+                    onClick={() => handlePersonSelect('disabled', i)}
+                  >
+                    {i}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
           
-          {/* ==================== 👇 여기가 수정된 부분입니다 👇 ==================== */}
-          <div className="flex flex-col gap-3.5 w-full max-w-2xl mx-auto">
-            {rowNames.map((row) => (
-              <div key={row} className="flex justify-center items-center">
-                {/* Row 라벨 (A, B, C...) 추가하여 가독성 향상 */}
-                <span className="w-8 text-center font-bold text-gray-400">{row}</span>
-                
-                {/* 통로(aisle)를 위한 gap */}
-                <div className="flex flex-grow justify-center gap-8">
-                  {[0, 1, 2].map((sectionIndex) => (
-                    <div key={sectionIndex} className="flex gap-2">
-                      {[...Array(4)].map((_, i) => {
-                        const seatNumber = sectionIndex * 4 + i + 1;
-                        const seat = seatData.find(s => s.row === row && s.number === seatNumber);
+          {/* 스크린 및 좌석 배치도 */}
+          <div className="bg-[#242337] p-6 rounded-lg w-full max-w-2xl mb-6">
+            <div className="bg-gradient-to-b from-gray-500 to-gray-700 h-16 w-full mb-6 flex items-center justify-center text-gray-200 text-lg font-semibold tracking-wider rounded-lg uppercase">
+              screen
+            </div>
 
-                        if (seat) {
-                          return renderSeatBtn(seat);
-                        } else {
-                          // 데이터 없는 좌석: 레이아웃 유지를 위한 placeholder
-                          // 💡 주의: w-8 h-8 은 실제 좌석 버튼 크기에 맞춰주세요.
-                          return <div key={`${row}-${seatNumber}`} className="w-8 h-8" />;
-                        }
+            <div className="flex flex-col **gap-0** items-center">
+              {rowNames.map((row) => (
+                <div key={row} className="flex items-center gap-2">
+                  <span className="w-6 text-center text-xs font-bold text-gray-400">{row}</span>
+                  <div className="flex gap-4"> {/* 통로 간격 */}
+                    <div className="flex flex-wrap gap-0"> {/* 1-4번 좌석 */}
+                      {[1, 2, 3, 4].map((seatNumber) => {
+                        const seat = seatData.find(s => s.row === row && s.number === seatNumber);
+                        return seat ? renderSeatBtnCustom(seat) : <div key={`${row}-${seatNumber}`} className="w-8 h-8" />;
                       })}
                     </div>
-                  ))}
+                    <div className="flex flex-wrap gap-0"> {/* 5-8번 좌석 */}
+                      {[5, 6, 7, 8].map((seatNumber) => {
+                        const seat = seatData.find(s => s.row === row && s.number === seatNumber);
+                        return seat ? renderSeatBtnCustom(seat) : <div key={`${row}-${seatNumber}`} className="w-8 h-8" />;
+                      })}
+                    </div>
+                    <div className="flex flex-wrap gap-0"> {/* 9-12번 좌석 */}
+                      {[9, 10, 11, 12].map((seatNumber) => {
+                        const seat = seatData.find(s => s.row === row && s.number === seatNumber);
+                        return seat ? renderSeatBtnCustom(seat) : <div key={`${row}-${seatNumber}`} className="w-8 h-8" />;
+                      })}
+                    </div>
+                  </div>
                 </div>
-                {/* 오른쪽 라벨 공간 확보하여 중앙 정렬 유지 */}
-                <span className="w-8"></span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-          {/* ==================== 👆 여기가 수정된 부분입니다 👆 ==================== */}
-
-          <div className="flex justify-center mt-5 gap-4">
+          
+          {/* 범례 */}
+          <div className="flex justify-center mt-6 gap-4 flex-wrap">
             {[
               { label: "선택 가능", color: "bg-white" },
               { label: "선택됨", color: "bg-red-500" },
@@ -134,45 +165,37 @@ const SeatPage = () => {
             </div>
           </div>
 
-          <button className="red-button" onClick={selectHandler}>
+          <button className="red-button mt-8 px-10 py-3 rounded-md text-white font-bold text-lg bg-red-600 hover:bg-red-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-[#1f1e2e]" onClick={() => alert('선택 완료!')}>
             선택완료
           </button>
         </div>
-        {/* 오른쪽: 영화 정보 */}
-        <div className="info-card">
-          {/* 영화 상세 정보 */}
-          <div className="movie-details">
-            {/* --- 영화 제목 영역 --- */}
-            <div className="movie-title-row">
-              <span className="age-rating">15</span>
-              <span className="movie-title">{reservationData[0].movie}</span>
-            </div>
-            <p className="movie-format">2D (자막)</p>
 
-            {/* --- 상세 정보 영역 (그리드) --- */}
-            <div className="movie-info-grid">
-              <span>영화관</span>
-              <span>{reservationData[0].theater}</span>
-              <span>날짜</span>
-              <span>{reservationData[0].date}</span>
-              <span>시간</span>
-              <span>{reservationData[0].time}</span>
+        {/* 우측: 영화 정보 카드 */}
+        <div className="bg-[#242337] p-6 rounded-lg shadow-lg w-full lg:w-1/4 min-w-[300px]">
+          <div className="flex flex-col gap-4">
+            {/* 영화 제목 및 등급 */}
+            <div className="flex items-center gap-2 border-b border-gray-600 pb-4">
+              <span className="inline-block px-2 py-1 text-xs font-bold rounded bg-yellow-500 text-white">15</span>
+              <span className="text-xl font-bold text-white">{reservationData[0]?.movie}</span>
             </div>
-            <p className="text-sm text-gray-400 m-0 mb-4">2D (자막)</p>
-            <div className="grid grid-cols-[60px_1fr] gap-2 text-base text-gray-300 border-b border-gray-600 pb-4 mb-4">
-              <span className="font-medium text-gray-400">영화관</span><span>{reservationData.theater}</span>
-              <span className="font-medium text-gray-400">날짜</span><span>{reservationData.date}</span>
-              <span className="font-medium text-gray-400">시간</span><span>{reservationData.time}</span>
+
+            {/* 상세 정보 */}
+            <div className="grid grid-cols-[60px_1fr] gap-2 text-base text-gray-300">
+              <span className="font-medium text-gray-400">영화관</span>
+              <span>{reservationData[0]?.theater}</span>
+              <span className="font-medium text-gray-400">날짜</span>
+              <span>{reservationData[0]?.date}</span>
+              <span className="font-medium text-gray-400">시간</span>
+              <span>{reservationData[0]?.time}</span>
             </div>
+
+            {/* 선택 좌석 */}
             <div>
-              <h4 className="mt-0 mb-3 text-base font-semibold text-white">선택 좌석</h4>
-              <div className="grid grid-cols-2 gap-2">
+              <h4 className="mt-4 mb-3 text-base font-semibold text-white">선택 좌석</h4>
+              <div className="grid grid-cols-3 gap-2 text-gray-300">
                 {selectedSeats.length > 0
-                  ? selectedSeats.map((seat) => <span>{seat}</span>)
-                  : // 선택된 좌석이 없을 때 표시할 내용
-                    Array.from({ length: 6 }).map((_, index) => (
-                      <span key={index}>-</span>
-                    ))}
+                  ? selectedSeats.map((seat, index) => <span key={index}>{seat}</span>)
+                  : Array.from({ length: 6 }).map((_, index) => <span key={index}>-</span>)}
               </div>
             </div>
           </div>

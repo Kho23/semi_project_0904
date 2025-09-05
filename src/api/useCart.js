@@ -69,17 +69,17 @@ export const useCart = () => {
   // 상태와 함수들을 객체로 묶어서 반환
   const handlePurchase = () => {
     const user = JSON.parse(localStorage.getItem("loginUser"));
-    const allUser = JSON.parse(localStorage.getItem("storageinfo"));
-    const updatedAllUser=allUser.map((userInfo) => { 
+    const allUser = JSON.parse(localStorage.getItem("storageinfo")); //모든 유저 정보와 현재 로그인된 유저 정보를 가져옴
+    const updatedAllUser=allUser.map((userInfo) => { //모든 유저 정보 담긴 배열에서 현재 로그인 유저 정보를 찾아서
       if (userInfo && userInfo.user_id == user.user_id) {
-        return {...userInfo, cart:cart}
+        return {...userInfo, cart:cart} //존재하면 현재 로그인 유저 정보를 펼처서 장바구니를 보관함
       } else {
-        return userInfo && userInfo;
+        return userInfo && userInfo; 
       }
     });
-    localStorage.setItem("storageinfo", JSON.stringify(updatedAllUser));
-    alert("장바구니에 저장되었습니다.");
-    navigate("/purchase");
+    localStorage.setItem("storageinfo", JSON.stringify(updatedAllUser)); //로컬스토리지에 현재 로그인 유저의 장바구니가 수정된 전체 유저정보 배열을 담아줌
+    alert("장바구니에 저장되었습니다."); //팝업창으로 저장 완료 알림
+    navigate("/purchase"); //결제 페이지로 이동
   };
 
   return {

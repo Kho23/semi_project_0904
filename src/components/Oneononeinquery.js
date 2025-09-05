@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import OneononeinqueryApi from "../api/OneononeinqueryApi";
 
-// 컴포넌트 이름은 대문자로 시작하는 것이 좋습니다.
 const OneOnOneInquiry = () => {
   const { inquiry,
     setInquiry,
