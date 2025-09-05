@@ -36,8 +36,7 @@ const CategorySection = ({ title, type, productData, checkLogin, handleAddToCart
               <button
                 className="w-full p-3 bg-amber-400 text-slate-900 font-semibold cursor-pointer transition-colors duration-200 hover:bg-amber-300"
                 onClick={() => checkLogin(() => handleAddToCart(i.id))}
-              > 
-              {/* 장바구니 담기 클릭 시 로그인된 상태면 그대로 handleAddToCart 실행, 로그아웃 상태면 로그인 모달 띄움 */}
+              >
                 장바구니 담기
               </button>
             </div>

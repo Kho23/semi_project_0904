@@ -29,7 +29,7 @@ export const useCart = () => {
     if (!product) return; //일치하는 id 없을때 예외 처리
     setCart((prev) => {
       //장바구니 설정 prev는 마지막으로 업데이트된 장바구니 배열
-      const exist = prev.find((i) => i.id === productId); //정바구니에서 인자로 받은 id 와 동일 id 가진 제품을 exist 에 담음
+      const exist = prev.find((i) => i.id === productId); //장바구니에서 인자로 받은 id 와 동일 id 가진 제품을 exist 에 담음
       if (exist) {
         //장바구니에 담기 누른 제품이 이미 있을때
         return prev.map(
@@ -60,7 +60,7 @@ export const useCart = () => {
 
   const handleRemove = (productId) => {
     //장바구니에서 제품 제거 버튼 누르면 실행되는 함수
-    setCart((prev) => prev.filter((i) => i.id !== productId)); // 마지막 업데이트된 장바구니 배열에서 인자로 받은 id 제품을 걸러버리고 다시 장바구니에 담음
+    setCart((prev) => prev.filter((i) => i.id !== productId)); // 마지막 업데이트된 장바구니 배열에서 인자로 받은 id와 다른 제품들만 남겨 새로운 배열을 생성하고 그 배열로 cart 상태를 업데이트함
   };
   const total = cart.reduce(
     (sum, { price, quantity }) => sum + price * quantity,
@@ -72,7 +72,7 @@ export const useCart = () => {
     const allUser = JSON.parse(localStorage.getItem("storageinfo")); //모든 유저 정보와 현재 로그인된 유저 정보를 가져옴
     const updatedAllUser=allUser.map((userInfo) => { //모든 유저 정보 담긴 배열에서 현재 로그인 유저 정보를 찾아서
       if (userInfo && userInfo.user_id == user.user_id) {
-        return {...userInfo, cart:cart} //존재하면 현재 로그인 유저 정보를 펼처서 장바구니를 보관함
+        return {...userInfo, cart:cart} //현재 로그인 유저를 찾으면 해당 유저 정보를 복사하고 cart 속성을 최신 장바구니 상태로 교체함
       } else {
         return userInfo && userInfo; 
       }
