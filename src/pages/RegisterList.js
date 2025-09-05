@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import '../css/RegisterList.css';
 import RegisterApi from '../api/RegisterApi';
 
 const RegisterList = () => {
