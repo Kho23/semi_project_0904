@@ -35,7 +35,10 @@ function App() {
             <Route path="/FAQ" element={<FAQPage />} />
             <Route path="/inquerylist" element={<InqueryPage />} />
             <Route path="/inquery" element={<Oneonone_inquery />} />
-            <Route path="/inquerylist/inquery/:inqueryId" element={<InqueryDetailPage />} />
+            <Route
+              path="/inquerylist/inquery/:inqueryId"
+              element={<InqueryDetailPage />}
+            />
             <Route path="/store" element={<StorePage />} />
             <Route path="/registerList" element={<RegisterList />} />
             <Route path="/myPage" element={<MyPage />} />
