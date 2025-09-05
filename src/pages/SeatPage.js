@@ -13,12 +13,20 @@ import { Link } from "react-router-dom";
 
 const SeatPage = () => {
   const {
-    seatData, setSeatData, selectedSeats, setSelectedSeats, selectedNormalLimit,
-    setSelectedNormalLimit, selectedDisabledLimit, setSelectedDisabledLimit,
-    reservationData, clickHandler, selectHandler, renderSeatBtn
-  } = seatApi()
+    seatData,
+    setSeatData,
+    selectedSeats,
+    selectedNormalLimit,
+    setSelectedNormalLimit,
+    selectedDisabledLimit,
+    setSelectedDisabledLimit,
+    reservationData,
+    selectHandler,
+    renderSeatBtn,
+  } = seatApi();
+
   useEffect(() => {
-    //localStorage에 저장한 값을 불러와 seatData에 담는다. 저장한 값이 없으면 기본데이터를 담는다.
+    //localStorage에 예약한 좌석정보를 불러와 seatData에 담는다. 저장한 값이 없으면 기본데이터를 담는다.
     const savedData = localStorage.getItem("reservedData");
     savedData ? setSeatData(JSON.parse(savedData)) : setSeatData(seatData);
   }, []);
@@ -34,8 +42,9 @@ const SeatPage = () => {
             {selectedNum.map((i) => (
               <button
                 key={i}
-                className={`people-btn ${selectedNormalLimit === Number(i) ? "active" : ""
-                  }`}
+                className={`people-btn ${
+                  selectedNormalLimit === Number(i) ? "active" : ""
+                }`}
                 onClick={() => {
                   const newNormal = Number(i);
                   if (newNormal + selectedDisabledLimit > 8) {
@@ -44,7 +53,9 @@ const SeatPage = () => {
                     setSelectedDisabledLimit(0);
                     return;
                   }
-                  setSelectedNormalLimit(newNormal);
+                  if (selectedNormalLimit == i) {
+                    setSelectedNormalLimit(0);
+                  } else setSelectedNormalLimit(newNormal);
                 }}
               >
                 {i}
@@ -59,8 +70,9 @@ const SeatPage = () => {
             {selectedNum.map((i) => (
               <button
                 key={i}
-                className={`people-btn ${selectedDisabledLimit === Number(i) ? "active" : ""
-                  }`}
+                className={`people-btn ${
+                  selectedDisabledLimit === Number(i) ? "active" : ""
+                }`}
                 onClick={() => {
                   const newDisabled = Number(i);
                   if (selectedNormalLimit + newDisabled > 8) {
@@ -69,7 +81,9 @@ const SeatPage = () => {
                     setSelectedDisabledLimit(0);
                     return;
                   }
-                  setSelectedDisabledLimit(newDisabled);
+                  if (selectedDisabledLimit == i) {
+                    setSelectedDisabledLimit(0);
+                  } else setSelectedDisabledLimit(newDisabled);
                 }}
               >
                 {i}
@@ -135,9 +149,9 @@ const SeatPage = () => {
             </div>
           </div>
 
-          <Link to="/" onClick={selectHandler}>
+          <button className="red-button" onClick={selectHandler}>
             선택완료
-          </Link>
+          </button>
         </div>
         {/* 오른쪽: 영화 정보 */}
         <div className="info-card">
@@ -146,18 +160,18 @@ const SeatPage = () => {
             {/* --- 영화 제목 영역 --- */}
             <div className="movie-title-row">
               <span className="age-rating">15</span>
-              <span className="movie-title">{reservationData.movie}</span>
+              <span className="movie-title">{reservationData[0].movie}</span>
             </div>
             <p className="movie-format">2D (자막)</p>
 
             {/* --- 상세 정보 영역 (그리드) --- */}
             <div className="movie-info-grid">
               <span>영화관</span>
-              <span>{reservationData.theater}</span>
+              <span>{reservationData[0].theater}</span>
               <span>날짜</span>
-              <span>{reservationData.date}</span>
+              <span>{reservationData[0].date}</span>
               <span>시간</span>
-              <span>{reservationData.time}</span>
+              <span>{reservationData[0].time}</span>
             </div>
 
             {/* --- 선택 좌석 표시 영역 --- */}
@@ -167,9 +181,9 @@ const SeatPage = () => {
                 {selectedSeats.length > 0
                   ? selectedSeats.map((seat) => <span>{seat}</span>)
                   : // 선택된 좌석이 없을 때 표시할 내용
-                  Array.from({ length: 6 }).map((_, index) => (
-                    <span key={index}>-</span>
-                  ))}
+                    Array.from({ length: 6 }).map((_, index) => (
+                      <span key={index}>-</span>
+                    ))}
               </div>
             </div>
           </div>
