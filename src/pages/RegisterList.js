@@ -1,7 +1,7 @@
 import { useState } from "react";
 import RegisterApi from "../api/RegisterApi";
 
-const RegisterList = () => {
+const RegisterList = () => { // RegisterApi 훅에서 필요한 상태와 함수들을 불러옴
   const {
     agreeList, // - agreeList: 이용약관 리스트
     accepted, // - accepted: 이용약관 동의 여부(boolean 배열)
@@ -32,10 +32,10 @@ const RegisterList = () => {
             checked={accepted[0]} // 이용약관 동의 여부
             onChange={(e) => 
               setAccepted( // 체크 상태가 바뀌면 accepted 배열 상태 갱신
-                accepted.map((v, idx) =>
+                accepted.map((v, idx) => // 기존 상태 배열을 map으로 순회하며
                   idx === currentList ? e.target.checked : v
-                )
-              )
+                ) // 현재 단계(currentList) 인덱스만 e.target.checked로 변경
+              ) // 나머지는 그대로 유지
             }
           />
           [{agreeList[0].label}] 내용을 읽고 동의합니다.
