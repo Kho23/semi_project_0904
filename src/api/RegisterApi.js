@@ -10,7 +10,7 @@ const RegisterApi = () => {
         { id: "accept", label: "가입완료", Component: AcceptTab },
     ];
 
-    const [accepted, setAccepted] = useState([false, false, false]);
+    const [accepted, setAccepted] = useState([false]);
     const [currentList, setCurrentList] = useState(0);
     const Current = agreeList[currentList].Component;
     return {agreeList,accepted,setAccepted,currentList,setCurrentList,Current,TermsDoc}

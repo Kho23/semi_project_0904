@@ -1,7 +1,5 @@
 import { useState } from "react";
 
-
-
 export const parkableTest = (i) => {
   console.log(i);
   if (i) return <div style={{ color: "blue" }}>주차 가능</div>;
