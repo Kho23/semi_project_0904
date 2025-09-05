@@ -6,7 +6,7 @@ export const MovieInfoApi = () => {
   const [currentIndex, setCurrentIndex] = useState(0); // 영화정보 담긴 배열 인덱스
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev - 1 + movies.length) % movies.length);
-    //prev 버튼 클릭 시 인덱스를 1 빼서 쓰는데 -1이 되면 오류 발생하기 때문에 방지용으로 사용
+    //prev 버튼 클릭 시 현재 표시되는 영화정보의 인덱스를 1 빼는 기능, prev 버튼 누르면 실행되는데  + movies.length 로 오류 방지
   };
   //prev 버튼 클릭 시 이전 영화 정보로 이동가게 함
   const handleNext = () => {
