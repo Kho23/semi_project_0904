@@ -15,6 +15,8 @@ import MyPage from "./pages/MyPage";
 import ReservationPage from "./pages/ReservationPage";
 import SeatPage from "./pages/SeatPage";
 import PurchsePage from "./pages/PurchsePage";
+import MyreservationPage from "./pages/MyreservationPage";
+import ChangeInfo from "./pages/ChangeInfo";
 
 function App() {
   const forSet = JSON.parse(localStorage.getItem("loginUser")) || null;
@@ -37,9 +39,11 @@ function App() {
             <Route path="/store" element={<StorePage />} />
             <Route path="/registerList" element={<RegisterList />} />
             <Route path="/myPage" element={<MyPage />} />
+            <Route path="/myPage/ChangeInfo" element={<ChangeInfo />} />
             <Route path="/reservation" element={<ReservationPage />} />
             <Route path="/seat" element={<SeatPage />} />
             <Route path="/purchase" element={<PurchsePage />} />
+            <Route path="/myPage/reservation" element={<MyreservationPage />} />
           </Routes>
           <Footer />
         </BrowserRouter>

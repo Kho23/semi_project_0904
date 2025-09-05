@@ -1,5 +1,5 @@
 import React from "react";
-import logo3 from "../image/logo3-removebg-preview.png";
+import logo3 from "../image/semicolonlogo_1.png";
 import facebook from "../image/facebook.jpg";
 import instagram from "../image/instagram.jpg";
 import youtube from "../image/youtube.jpg";

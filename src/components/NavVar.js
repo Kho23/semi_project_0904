@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import logo3 from "../image/logo3-removebg-preview.png";
+import logo3 from "../image/semicolonlogo_1.png";
 import { useNavigate } from "react-router-dom";
 import LoginModal from "./auth/LoginModal";
 import LoginApi from "../api/LoginApi";
@@ -41,10 +41,11 @@ const NavVar = () => {
   }, []);
 
   return (
-    <nav className="sticky top-0 z-50 bg-black/80 backdrop-blur-sm border-b border-gray-800 shadow-lg">
-      <div className="flex justify-between items-center h-20 max-w-7xl mx-auto px-8">
-        <a href="/" className="flex-shrink-0">
-          <img className="h-12 w-auto" src={logo3} alt="Cinema Logo" />
+    <nav className="nav-bar bg-black">
+      <div className="nav-container">
+        {/* 1. 왼쪽: 로고 */}
+        <a href="/" className="logo-link pb-3.5">
+          <img className="logo-image" src={logo3} alt="Cinema Logo" />
         </a>
 
         <div className="flex items-center gap-10 text-gray-300 font-semibold">
