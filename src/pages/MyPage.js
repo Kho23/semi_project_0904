@@ -8,8 +8,8 @@ import { RiCustomerService2Fill } from "react-icons/ri";
 import { RiCoupon2Line } from "react-icons/ri";
 import { RiQuestionAnswerLine } from "react-icons/ri";
 import { RiFileList3Line, RiCoinsLine } from "react-icons/ri";
-import "../css/MyPage.css";
 import { Link, useNavigate } from "react-router-dom";
+import "../css/MyPage.css";
 
 const MyPage = () => {
   const [loginuser, setLoginuser] = useState("");
@@ -89,10 +89,8 @@ const MyPage = () => {
           포인트
         </li>
         <li className="changeInfo">
-          <i>
-            <IoSettingsOutline />
-          </i>{" "}
-          개인정보 변경
+          <button onClick={()=>navigate("/myPage/ChangeInfo")}>
+          <i><IoSettingsOutline /></i> 개인 정보 변경 </button>
         </li>
       </ul>
     </div>
