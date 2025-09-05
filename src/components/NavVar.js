@@ -3,10 +3,12 @@ import logo3 from "../image/semicolonlogo_1.png";
 import { useNavigate } from "react-router-dom";
 import LoginModal from "./auth/LoginModal";
 import LoginApi from "../api/LoginApi";
+import "../css/NavVar.css"; // CSS 파일 import
 
+// 사용자 아이콘 SVG (className을 prop으로 받도록 수정)
 const UserIcon = ({ className }) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    xmlns="http://www.w.org/2000/svg"
     viewBox="0 0 24"
     fill="currentColor"
     className={className}
@@ -48,51 +50,54 @@ const NavVar = () => {
           <img className="logo-image" src={logo3} alt="Cinema Logo" />
         </a>
 
-        <div className="flex items-center gap-10 text-gray-300 font-semibold">
+        {/* 2. 중앙: 메인 메뉴 */}
+        <div className="main-menu">
           <button
             onClick={() => checkLogin(() => navigate("reservation"))}
-            className="transition-colors duration-300 ease-in-out hover:text-red-500"
+            className="menu-item"
           >
             예매
           </button>
-          <a href="/store" className="transition-colors duration-300 ease-in-out hover:text-red-500">
+          <a href="/store" className="menu-item">
             스토어
           </a>
-          <a href="/FAQ" className="transition-colors duration-300 ease-in-out hover:text-red-500">
+          <a href="/FAQ" className="menu-item">
             자주 묻는 질문
           </a>
-          <a href="/inquerylist" className="transition-colors duration-300 ease-in-out hover:text-red-500">
+          <a href="/inquerylist" className="menu-item">
             1대1 문의
           </a>
         </div>
 
-        <div className="flex items-center gap-4 text-sm font-medium">
+        {/* 3. 오른쪽: 사용자 메뉴 */}
+        <div className="user-menu">
           {!loginuser ? (
             <>
-              <button onClick={toggleModal} className="text-gray-400 transition-colors duration-300 ease-in-out hover:text-white">
+              <button onClick={toggleModal} className="auth-button">
                 로그인
               </button>
               <a
                 onClick={linkToRegisterList}
                 href="/registerList"
-                className="text-white bg-red-600 px-4 py-2 rounded-md transition-all duration-300 ease-in-out hover:bg-red-700"
+                className="register-button"
               >
                 회원가입
               </a>
             </>
           ) : (
             <>
-              <button onClick={logoutIdPassword} className="text-gray-400 transition-colors duration-300 ease-in-out hover:text-white">
+              <button onClick={logoutIdPassword} className="auth-button">
                 로그아웃
               </button>
-              <button onClick={goToMyPage} className="flex items-center gap-2 text-gray-400 border border-gray-700 px-4 py-2 rounded-md transition-all duration-300 ease-in-out hover:border-gray-500 hover:text-white">
-                <UserIcon className="w-5 h-5" />
+              <button onClick={goToMyPage} className="mypage-button">
+                <UserIcon className="user-icon" />
                 <span>{infotype()}</span>
               </button>
             </>
           )}
         </div>
       </div>
+      {/* 모달 렌더링 */}
       <LoginModal modal={modalOpen} r={toggleModal} />
     </nav>
   );
