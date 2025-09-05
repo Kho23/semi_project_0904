@@ -24,29 +24,42 @@ const LoginModal = ({ modal, r }) => {
   
   const loginIdPassword = () => {  // 아이디와 비밀번호로 로그인 처리 함수
     const storageinfo = JSON.parse(localStorage.getItem("storageinfo")) || [];
-    // localStorage에 저장된 사용자 정보(storageinfo)와 비교
+    // localStorage에 저장된 사용자 목록 불러오기 (없으면 빈 배열)
     const findinfo = storageinfo.find((i) =>i && i.user_id === id && i.user_password === password);
+    // 입력한 id / password와 일치하는 사용자 검색
     
-    
-    if(findinfo) {
-      localStorage.setItem("loginUser", JSON.stringify(findinfo));
-      alert(`${findinfo.user_lastname}${findinfo.user_firstname}님 로그인 하셨습니다.`);
-      navigate("/");
+    if(findinfo) { // 로그인 성공 시: 
+      localStorage.setItem("loginUser", JSON.stringify(findinfo)); // 로그인한 사용자 정보를 localStorage에 저장
+      alert(`${findinfo.user_lastname}${findinfo.user_firstname}님 로그인 하셨습니다.`); // 사용자 성+이름을 합쳐서 환영 메시지 출력
+      navigate("/"); // 메인 페이지로 이동 후 새로고침
       window.location.reload();
-    } else {
+    } else { // 로그인 실패 시:
       alert("아이디 혹은 비밀번호를 다시 확인해 주세요");
-      setId("");
+      setId(""); // 알림 메시지 및 입력 값 초기화
       setPassword("");
     }
   };  
   
-  return (
-    <Modal isOpen={modal} toggle={r} backdropClassName="bg-black/50" contentClassName="rounded-lg p-5 max-w-sm mx-auto shadow-lg">
-      <ModalHeader toggle={r} className="bg-gray-800 text-white border-b-0 text-xl font-bold">
+  return ( // Reactstrap Modal 컴포넌트 사용
+    <Modal 
+      isOpen={modal} // 모달 열림 여부
+      toggle={r} // 닫기/열기 함수
+      backdropClassName="bg-black/50" 
+      contentClassName="rounded-lg p-5 max-w-sm mx-auto shadow-lg">
+
+      {/* 모달 헤더 */}
+      <ModalHeader 
+        toggle={r} 
+        className="bg-gray-800 text-white border-b-0 text-xl font-bold">
         Login
       </ModalHeader>
+
+      {/* 모달 본문 */}
       <ModalBody className="flex flex-col gap-4">
+        {/* 로그인 폼 (submit 시 loginIdPassword 실행) */}
         <Form onSubmit={(e) => { e.preventDefault(); loginIdPassword(); }}>
+
+          {/* 아이디 입력 필드 */}
           <div>
             <Label className="font-semibold mb-1 block">ID</Label>
             <Input 
@@ -57,6 +70,8 @@ const LoginModal = ({ modal, r }) => {
               className="p-2.5 rounded-md border border-gray-300 w-full text-base"
             />
           </div>
+
+          {/* 비밀번호 입력 필드 */}
           <div>
             <Label className="font-semibold mb-1 block">Password</Label>
             <Input 
@@ -66,6 +81,8 @@ const LoginModal = ({ modal, r }) => {
               onChange={(e) => setPassword(e.target.value)} 
               className="p-2.5 rounded-md border border-gray-300 w-full text-base"
             />
+
+          {/* 로그인 버튼 */}
           </div>
           <Button 
             color="dark" 

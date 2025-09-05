@@ -58,35 +58,35 @@ const SignUp = () => {
       return;
     }
 
-    const isDuplicate = users.some(user => user && user.user_id === id);
-    if (isDuplicate) { // users 배열에서 중복 아이디 존재 여부 확인
+    const idDuplicate = users.some(user => user && user.user_id === id);  // users 배열에서 중복 아이디 존재 여부 확인
+    if (idDuplicate) { // 만약 중복이면
       alert("이미 존재하는 아이디입니다.");
-      setId(""); // 중복이면 입력창 비움
-    } else {
+      setId(""); // 알림 및 입력창 비움
+    } else { // 중복이 아니라면
       alert("사용 가능한 아이디입니다.");
-      setButtoncheck(true); // 중복 확인 완료 상태 갱신
+      setButtoncheck(true); // 알림 및 중복 확인 완료 상태 갱신
     }
   };
 
-  const checkEventNo = () => { // 이메일 수신 거부 체크
+  const checkEventNo = () => { // 이메일 수신 거부 체크 시
     alert("이벤트 메일 수신을 거절하였습니다");
-    setNewUser((prev) => ({ ...prev, eventNo: !prev.eventNo }));
-  };
+    setNewUser((i) => ({ ...i, eventNo: !i.eventNo }));
+  }; // 기존 상태(i)를 펼쳐서 eventNo 값을 반전시킴(false)
 
   const changeHandler = (e) => { // input 값 변경 시 newUser에 반영하는 핸들러
-    const { value, id } = e.target;
-    setNewUser((prev) => ({ ...prev, [id]: value }));
-  };
+    const { value, id } = e.target; // 입력된 값(value)과 input의 id 속성 가져오기
+    setNewUser((i) => ({ ...i, [id]: value }));
+  }; // 기존 상태(i)를 펼쳐서 input의 id를 key로 하여 해당 key의 값을 value로 업데이트
 
   const finishSignup = (e) => { // 회원가입 완료 처리
-    e.preventDefault();
-    if (buttonCheck) {
-      alert("회원가입이 완료되었습니다");
-      setCompleted(true);
-      // users 배열에 신규 회원 추가
+    e.preventDefault(); // form 기본 제출 동작 방지
+    if (buttonCheck) { // 아이디 중복 확인이 완료된 경우
+      alert("회원가입이 완료되었습니다"); // 성공 메시지
+      setCompleted(true); // 회원가입 완료 상태로 변경
       setUsers((prevUsers) => [...prevUsers, newUser]);
-    } else {
-      alert("아이디 중복 확인을 해주세요.");
+      // users 배열에 신규 회원 추가
+    } else { // 아이디 중복 확인이 되지 않은 경우
+      alert("아이디 중복 확인을 해주세요."); // 재시도 메시지
     }
   };
 
@@ -98,7 +98,7 @@ const SignUp = () => {
   return (
     <div className="font-['Segoe_UI',_sans_serif]">
       <form
-        onSubmit={finishSignup}
+        onSubmit={finishSignup} // 폼 제출 시 finishSignup 함수 실행
         className="max-w-md mx-auto my-10 p-7 rounded-xl bg-gradient-to-b from-white to-slate-100 shadow-lg sm:max-w-lg"
       >
 
@@ -118,7 +118,7 @@ const SignUp = () => {
                 <input
                   type="text"
                   id="user_lastname"
-                  onChange={changeHandler}
+                  onChange={changeHandler} // 입력값이 newUser.user_lastname에 반영됨
                   required
                   className="w-full p-2.5 text-sm mt-1 border border-gray-300 rounded-md box-border transition-all duration-200 ease-in-out focus:border-blue-500 focus:shadow-[0_0_5px_rgba(0,123,255,0.3)] focus:outline-none"
                 />
@@ -130,7 +130,7 @@ const SignUp = () => {
                 <input
                   type="text"
                   id="user_firstname"
-                  onChange={changeHandler}
+                  onChange={changeHandler} // 입력값이 newUser.user_firstname에 반영됨
                   required
                   className="w-full p-2.5 text-sm mt-1 border border-gray-300 rounded-md box-border transition-all duration-200 ease-in-out focus:border-blue-500 focus:shadow-[0_0_5px_rgba(0,123,255,0.3)] focus:outline-none"
                 />
@@ -152,18 +152,19 @@ const SignUp = () => {
               </label>
               <div className="flex items-center">
 
-                {/* 아이디 필드일 경우 → id state와 changeHandler 같이 적용 */}
+                {/* 공통 input 요소 */}
                 <input
                   type={field.type}
                   id={field.id}
                   placeholder={field.placeholder}
                   value={field.id === 'user_id' ? id : undefined}
+                  // 아이디 입력 필드일 경우 id 상태와 연동 + 중복확인 로직 함께 실행
                   onChange={field.id === 'user_id' ? (e) => { setId(e.target.value); changeHandler(e); } : changeHandler}
                   required
                   className="w-full p-2.5 text-sm mt-1 border border-gray-300 rounded-md box-border transition-all duration-200 ease-in-out focus:border-blue-500 focus:shadow-[0_0_5px_rgba(0,123,255,0.3)] focus:outline-none"
                 />
 
-                {/* 아이디 입력 옆에 중복확인 버튼 추가 */}
+                {/* 아이디 입력 필드일 때만 → 옆에 중복확인 버튼 표시 */}
                 {field.id === 'user_id' && (
                   <button type="button" onClick={checkDouble} className="ml-2 px-3 py-1.5 text-sm text-white bg-cyan-500 border-none rounded-md cursor-pointer hover:bg-cyan-600 self-start mt-1 whitespace-nowrap">
                     중복확인
@@ -181,16 +182,18 @@ const SignUp = () => {
             </li>
           ))}
 
-          {/* 성별 선택 */}
+          {/* 성별 선택 라디오 버튼 */}
           <li className="mb-4">
             <label className="text-sm block mb-1">
               성별 선택<span className="text-red-500">*</span>
             </label>
             <div className="mt-2">
+              {/* 남자 선택 */}
               <label className="mr-4">
                 <input type="radio" name="user_gender" id="user_gender_M" onClick={checkMgender} className="mr-1.5" />
                 남자
               </label>
+              {/* 여자 선택 */}
               <label>
                 <input type="radio" name="user_gender" id="user_gender_F" onClick={checkFgender} className="mr-1.5" />
                 여자
@@ -217,4 +220,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-

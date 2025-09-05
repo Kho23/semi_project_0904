@@ -34,12 +34,12 @@ const NavVar = () => {
     loginuser,
   } = LoginApi();
 
-  useEffect(() => {
+  useEffect(() => { // localStorage에 저장된 "loginUser" 데이터 가져오기
     const forSet = JSON.parse(localStorage.getItem("loginUser"));
-    if (forSet) {
+    if (forSet) { 
       setLoginuser(forSet);
-    }
-  }, [setLoginuser]); // 의존성 배열에 setLoginuser 추가
+    } // 값이 존재하면 loginUser 상태를 해당 값으로 초기화
+  }, [setLoginuser]); // 컴포넌트가 처음 렌더링될 때 한 번 실행됨
 
   return (
     <nav className="nav-bar bg-black">
@@ -71,11 +71,15 @@ const NavVar = () => {
 
         {/* 3. 오른쪽: 사용자 메뉴 */}
         <div className="user-menu flex items-center space-x-4">
-          {!loginuser ? (
+          {!loginuser ? ( // loginuser 값이 없을 경우 → 로그인/회원가입 버튼 표시 
             <>
+
+              {/* 로그인 버튼 → 모달 열기 */}
               <button onClick={toggleModal} className="auth-button text-white text-sm font-semibold hover:text-gray-400 transition-colors duration-200">
                 로그인
               </button>
+
+              {/* 회원가입 버튼 → /registerList 페이지로 이동 */}
               <a
                 href="/registerList"
                 className="register-button px-4 py-2 rounded-md bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-colors duration-200"
@@ -83,20 +87,24 @@ const NavVar = () => {
                 회원가입
               </a>
             </>
-          ) : (
-            <>
+          ) : ( // loginuser 값이 존재할 경우 → 로그아웃/마이페이지 버튼 표시
+            <> 
+
+              {/* 로그아웃 버튼 → logoutIdPassword 실행 */}
               <button onClick={logoutIdPassword} className="auth-button text-white text-sm font-semibold hover:text-gray-400 transition-colors duration-200">
                 로그아웃
               </button>
+
+              {/* 마이페이지 버튼 → goToMyPage 실행, 사용자 이름 표시 */}
               <button onClick={goToMyPage} className="mypage-button flex items-center gap-1 text-white text-sm font-semibold hover:text-gray-400 transition-colors duration-200">
                 <UserIcon className="w-5 h-5" />
-                <span>{infotype()}</span>
+                <span>{infotype()}</span> {/* 사용자 이름 또는 정보 표시 */}
               </button>
             </>
           )}
         </div>
       </div>
-      {/* 모달 렌더링 */}
+      {/* 로그인 모달 컴포넌트 렌더링 */}
       <LoginModal modal={modalOpen} r={toggleModal} />
     </nav>
   );
