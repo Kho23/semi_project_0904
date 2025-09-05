@@ -1,6 +1,5 @@
 import "../css/SignUp.css";
 import AcceptTab from "../components/register/AcceptTab";
-import SignUpApi from "../api/SignUpApi";
 
 
 const SignUp = () => {

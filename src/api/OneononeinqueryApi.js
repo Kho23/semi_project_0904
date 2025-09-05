@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const OneononeinqueryApi = () => {
     const [inquiry, setInquiry] = useState({ title: "", content: "" });
-    
+    const navigate = useNavigate();
       const handleChange = (e) => {
         const { name, value } = e.target;
         setInquiry({ ...inquiry, [name]: value });
@@ -27,10 +28,14 @@ const OneononeinqueryApi = () => {
         alert("등록이 완료되었습니다.");
         setInquiry({ title: "", content: "" });
       };
+      const backToInqueryList=(e)=>{
+        navigate('/inquerylist')
+      }
   return {inquiry,
     setInquiry,
     handleChange,
-    handleSubmit,}
+    handleSubmit,
+  backToInqueryList}
 }
 
 export default OneononeinqueryApi
