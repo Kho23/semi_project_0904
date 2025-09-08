@@ -88,7 +88,8 @@ const NavVar = () => {
               <button onClick={logoutIdPassword} className="auth-button text-white text-sm font-semibold hover:text-gray-400 transition-colors duration-200">
                 로그아웃
               </button>
-              <button onClick={goToMyPage} className="mypage-button flex items-center gap-1 text-white text-sm font-semibold hover:text-gray-400 transition-colors duration-200">
+              <button onClick={goToMyPage} 
+              className="mypage-button flex items-center gap-1 text-white text-sm font-semibold hover:text-gray-400 transition-colors duration-200">
                 <UserIcon className="w-5 h-5" />
                 <span>{infotype()}</span>
               </button>

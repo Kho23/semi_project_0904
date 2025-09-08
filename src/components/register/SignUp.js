@@ -58,13 +58,14 @@ const SignUp = () => {
       return;
     }
 
-    const isDuplicate = users.some(user => user && user.user_id === id);
-    if (isDuplicate) { // users 배열에서 중복 아이디 존재 여부 확인
+    const isDuplicate = users.find(user => user && user.user_id === id);
+    // users 배열에서 중복 아이디 존재 여부 확인
+    if (isDuplicate) { // 만약 중복이면
       alert("이미 존재하는 아이디입니다.");
-      setId(""); // 중복이면 입력창 비움
-    } else {
+      setId(""); // 알림 및 입력창 비움
+    } else { // 중복이 아니라면
       alert("사용 가능한 아이디입니다.");
-      setButtoncheck(true); // 중복 확인 완료 상태 갱신
+      setButtoncheck(true); // 알림 및 중복 확인 완료 상태 갱신
     }
   };
 

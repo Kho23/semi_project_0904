@@ -50,12 +50,9 @@ const LoginApi = () => { // LoginApi 훅
     };
 
     const goToMyPage = () => { // 마이페이지 이동 함수
-        if (loginuser) {
-            navigate("/myPage"); // 로그인 상태일 때만 이동
-        } else {
-            setModalOpen(true); // 아니면 로그인 모달 열기
-        }
+            navigate("/myPage");
     };
+
     return {
         linkToRegisterList, checkLogin, toggleModal, logoutIdPassword,
         infotype, goToMyPage, loginuser, setLoginuser, navigate, modalOpen
